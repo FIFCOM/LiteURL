@@ -4,15 +4,30 @@ if( !defined('LITEURL_VERSION' ) ) {
     exit();
 }
 
-function lurlRandomStr($salt)
+function lurlRandomStr($strLength)
 {
-    $time = uniqid();
-    return dechex(crc32("$time-$salt"));
+    if (!isset($strLength)) $strLength = 8;
+    $str = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890';
+    return substr(str_shuffle($str), 1, $strLength);
 }
 
 function lurlQRUri($string){
     return 'https://www.zhihu.com/qrcode?url='.urlencode($string);
 }
+
+function lurlWrite($string){
+    return 0;
+}
+
+function lurlRead($string){
+    return 0;
+}
+
+function lurlAccessKeyValidat($string){
+    return 0;
+}
+
+# SQL format : uri(http(s)://***.**/) alias(/******) expire($time) key(?key=customAccessKey-RIPEMD-128-Crypt) 
 
 $lurlIcon = ICON_URL?ICON_URL:"https://q.qlogo.cn/headimg_dl?dst_uin=1280874899&spec=640";
 $lurlTLSEncryption = TLS_ENCRYPT == "enable"?"https://":"http://";

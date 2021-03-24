@@ -1,10 +1,10 @@
 <?php
-define('DB_HOSTNAME', 'localhost');
-define('DB_USERNAME', 'root');
-define('DB_PASSWORD', 'root');
-define('DB_NAME', 'liteurl');
-define('API_KEY', '114514');
-define('USER_TOKEN', '114514');
-define('LiteURL_VER', '1.0.0');
+define('LURL_DB_HOSTNAME', 'localhost');
+define('LURL_DB_USERNAME', 'root');
+define('LURL_DB_PASSWORD', 'root');
+define('LURL_DB_NAME', 'liteurl');
+define('LURL_API_KEY', '194151b802528a0cfb1cd7bf28281963');
+define('LURL_ADMIN_PWD', '194151b802528a0cfb1cd7bf28281963');
+define('LITEURL_VERSION', '0.9.9b');
 error_reporting(E_ALL);
 $_ERROR = array();
