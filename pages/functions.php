@@ -4,11 +4,21 @@ if( !defined('LITEURL_VERSION' ) ) {
     exit();
 }
 
-function lurlRandomStr($strLength)
+function lurlRandomToken($strLength)
 {
+	/*
     if (!isset($strLength)) $strLength = 8;
     $str = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890';
     return substr(str_shuffle($str), 1, $strLength);
+    --  unsafe  --
+    */
+    $str = 'qwertyuiopasdfghjklzxcvbnm';
+    $str .= 'QWERTYUIOPASDFGHJKLZXCVBNM';
+    $str .= '1234567890';
+    $token = '';
+    for ($it = 0;$it < $strLength;$it++) $token .= $str[random_int(0, strlen($str) - 1)];
+    return $token;
+
 }
 
 function lurlQRUri($string){
