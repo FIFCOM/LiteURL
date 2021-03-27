@@ -23,8 +23,23 @@ function lurlSet($alias, $key){
 }
 
 function lurlGet($alias, $key){
-    $key = hash("ripemd128", $$key);
+    $key = hash("ripemd128", $key);
+    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
+    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
+    $result = mysqli_query($conn,"SELECT * FROM lurl WHERE alias='$alias'");
+    $row = mysqli_fetch_array($result);
+    $encryptedUri = $row['uri']; $expire = $row['expire'] - time(); $count = $row['count'];
+    $uri = openssl_decrypt($encryptedUri,'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_CRYPT_IV);
+    if ($expire <= 0) lurlDelete($alias);
+    lurlCount($count + 1);
+    if (!$uri || $expire <= 0) return 0; else return $uri;
+}
 
+function lurlDelete($alias) {
+    return 0;
+}
+
+function lurlCount($count) {
     return 0;
 }
 
