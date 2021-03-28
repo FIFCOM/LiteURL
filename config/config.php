@@ -12,7 +12,7 @@ define('LURL_DB_PASSWORD', 'localhost');
 define('LURL_DB_NAME', 'liteurl');
 /*             */
 
-/* Advanced settings - DO NOT MODIFY */
+/* Advanced settings */
 define('TLS_ENCRYPT', 'enable');
 define('LURL_API_KEY', '00000000000000000000000000000000');
 define('LURL_ADMIN_PWD', '00000000000000000000000000000000');

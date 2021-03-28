@@ -19,6 +19,9 @@ function lurlQRUri($string){
 }
 
 function lurlSet($alias, $key){
+    $key = hash("ripemd128", $key);
+    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
+    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
     return 0;
 }
 
@@ -36,14 +39,20 @@ function lurlGet($alias, $key){
 }
 
 function lurlDelete($alias) {
+    $key = hash("ripemd128", $key);
+    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
+    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
     return 0;
 }
 
 function lurlCount($count) {
+    $key = hash("ripemd128", $key);
+    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
+    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
     return 0;
 }
 
-# SQL format : uri(http(s)://***.**/) alias(/******) expire($time) key(?key=customAccessKey-RIPEMD-128-Crypt) 
+# SQL format : uri(http(s)://***.**/-?key=customAccessKey-RIPEMD-128-Crypt) alias(/******) expire($time)
 
 $lurlIcon = ICON_URL?ICON_URL:"https://q.qlogo.cn/headimg_dl?dst_uin=1280874899&spec=640";
 $lurlTLSEncryption = TLS_ENCRYPT == "enable"?"https://":"http://";
