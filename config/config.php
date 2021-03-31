@@ -10,6 +10,8 @@ define('LURL_DB_HOSTNAME', 'localhost');
 define('LURL_DB_USERNAME', 'root');
 define('LURL_DB_PASSWORD', 'localhost');
 define('LURL_DB_NAME', 'liteurl');
+define('LURL_SHORTEST_ALIAS_LENGTH', '6');
+define('LURL_LONGEST_ALIAS_LENGTH', '16');
 /*             */
 
 /* Advanced settings */
