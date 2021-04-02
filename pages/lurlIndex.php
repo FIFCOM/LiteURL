@@ -68,7 +68,7 @@ ini_set('display_errors', 0);
     <div class="mdui-card" style="margin-top: 15px;border-radius:10px">
         <div class="mdui-card-primary">
             <div class="mdui-card-primary-title"><?=SITE_NAME?> - 短网址生成</div>
-            <div class="mdui-card-primary-subtitle" style="margin-top: 5px"><script type="text/javascript" src="https://api.fifcom.cn/fifcom-hitokoto/?format=js&charset=utf-8&type=+"></script> <div id="fifcomhitokoto">「 <script>fifcomhitokoto()</script> 」</div></div>
+            <div class="mdui-card-primary-subtitle" style="margin-top: 5px"><?=$lurlCardMessage?></div>
         </div>
         <div class="mdui-card-content" style="margin-top: -35px">
             <div id="markdown-view" class="markdown-body editormd-html-preview">
@@ -85,31 +85,31 @@ ini_set('display_errors', 0);
                     </div>
                     <div class="mdui-textfield mdui-textfield-floating-label">
                         <label class="mdui-textfield-label">自定义短网址</label>
-                        <input class="mdui-textfield-input" type="text" name="customalias" value="<?=$lurlDefaltCustomAlias?>" maxlength="<?=LURL_LONGEST_ALIAS_LENGTH?>"/>
-                        <div class="mdui-textfield-helper">不少于<?=LURL_SHORTEST_ALIAS_LENGTH?>个字母,默认为<?=$lurlDefaltCustomAlias?></div>
+                        <input class="mdui-textfield-input" type="text" name="customalias" value="<?=$lurlDefaltCustomAlias?>" maxlength="<?=LURL_MAX_ALIAS_LENGTH?>"/>
+                        <div class="mdui-textfield-helper">不少于<?=LURL_MIN_ALIAS_LENGTH?>个字母,默认为<?=$lurlDefaltCustomAlias?></div>
                     </div>
                     </br>
 
                     <label class="mdui-radio">
-                    <input type="radio" name="valid" value="6408"/>
+                    <input type="radio" name="customexpire" value="6408"/>
                     <i class="mdui-radio-icon"></i>
                         7天有效
                     </label>
 
                     <label class="mdui-radio">
-                    <input type="radio" name="valid" value="25920" checked/>
+                    <input type="radio" name="customexpire" value="25920" checked/>
                     <i class="mdui-radio-icon"></i>
                         30天有效
                     </label>
 
                     <label class="mdui-radio">
-                    <input type="radio" name="valid" value="315360"/>
+                    <input type="radio" name="customexpire" value="315360"/>
                     <i class="mdui-radio-icon"></i>
                         一年有效
                     </label>
 
                     <label class="mdui-radio">
-                    <input type="radio" name="valid" value="0" <?=$lurl?>/>
+                    <input type="radio" name="customexpire" value="0" <?=$lurl?>/>
                     <i class="mdui-radio-icon"></i>
                         永久有效
                     </label>
