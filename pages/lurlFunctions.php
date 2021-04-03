@@ -36,7 +36,7 @@ function lurlSet($uri, $alias, $key, $expire){
     }
 }
 
-function lurlGet($alias, $key, $countpp){
+function lurlGet($alias, $key, $countpp, $action){
     $key = hash("ripemd128", $key);
     $rawAlias = $alias;
     $alias = hash("ripemd128", $alias);
@@ -53,6 +53,8 @@ function lurlGet($alias, $key, $countpp){
     if (!$uri) return -1; //lurlRedirectKeyError
     else return $uri;
 }
+
+
 
 function lurlDelete($alias) {
     $alias = hash("ripemd128", $alias);
