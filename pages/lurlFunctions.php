@@ -55,7 +55,6 @@ function lurlGet($alias, $key, $countpp, $action){
 }
 
 
-
 function lurlDelete($alias) {
     $alias = hash("ripemd128", $alias);
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
