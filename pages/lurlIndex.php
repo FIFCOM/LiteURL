@@ -54,7 +54,7 @@ ini_set('display_errors', 0);
         opacity: .5
     }
     </style>
-    <title><?=SITE_NAME?> - Powered by LiteURL</title>
+    <title><?=SITE_NAME?> - 短网址生成</title>
 </head>
 <body class="mdui-appbar-with-toolbar mdui-theme-primary-<?=$lurlPrimaryTheme?> mdui-theme-accent-<?=$lurlAccentTheme?> mdui-theme-layout-auto mdui-loaded">
     <header class="mdui-appbar mdui-appbar-fixed">
