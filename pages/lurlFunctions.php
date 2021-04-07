@@ -36,7 +36,7 @@ function lurlSet($uri, $alias, $key, $expire){
     }
 }
 
-function lurlGet($alias, $key, $countpp, $action){
+function lurlGet($alias, $key, $countpp){
     $key = hash("ripemd128", $key);
     $rawAlias = $alias;
     $alias = hash("ripemd128", $alias);
