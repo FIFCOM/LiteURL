@@ -71,45 +71,45 @@ ini_set('display_errors', 0);
             <div class="mdui-card-primary-subtitle" style="margin-top: 5px"><?=$lurlCardMessage?></div>
         </div>
         <div class="mdui-card-content" style="margin-top: -35px">
-            <div id="markdown-view" class="markdown-body editormd-html-preview">
+            <div>
                 <form action="#" method="post">
                     <div class="mdui-textfield mdui-textfield-floating-label">
                         <label class="mdui-textfield-label">网址</label>
-                        <input class="mdui-textfield-input" type="text" name="uri" maxlength="2048"/>
+                        <input class="mdui-textfield-input" type="text" name="customUri" maxlength="2048"/>
                         <div class="mdui-textfield-helper">(*必填)请加上https://或http://</div>
                     </div>
                     <div class="mdui-textfield mdui-textfield-floating-label">
                         <label class="mdui-textfield-label">访问密码</label>
-                        <input class="mdui-textfield-input" type="text" name="customkey" maxlength="16"/>
+                        <input class="mdui-textfield-input" type="text" name="customKey" maxlength="16"/>
                         <div class="mdui-textfield-helper">默认无密码</div>
                     </div>
                     <div class="mdui-textfield mdui-textfield-floating-label">
                         <label class="mdui-textfield-label">自定义短网址</label>
-                        <input class="mdui-textfield-input" type="text" name="customalias" value="<?=$lurlDefaltCustomAlias?>" maxlength="<?=LURL_MAX_ALIAS_LENGTH?>"/>
-                        <div class="mdui-textfield-helper">不少于<?=LURL_MIN_ALIAS_LENGTH?>个字母,默认为<?=$lurlDefaltCustomAlias?></div>
+                        <input class="mdui-textfield-input" type="text" name="customAlias" value="<?=$lurlDefaultCustomAlias?>" maxlength="<?=LURL_MAX_ALIAS_LENGTH?>"/>
+                        <div class="mdui-textfield-helper">不少于<?=LURL_MIN_ALIAS_LENGTH?>个字母,默认为<?=$lurlDefaultCustomAlias?></div>
                     </div>
                     </br>
 
                     <label class="mdui-radio">
-                    <input type="radio" name="customexpire" value="6408"/>
+                    <input type="radio" name="customExpire" value="6408"/>
                     <i class="mdui-radio-icon"></i>
                         7天有效
                     </label>
 
                     <label class="mdui-radio">
-                    <input type="radio" name="customexpire" value="25920" checked/>
+                    <input type="radio" name="customExpire" value="25920" checked/>
                     <i class="mdui-radio-icon"></i>
                         30天有效
                     </label>
 
                     <label class="mdui-radio">
-                    <input type="radio" name="customexpire" value="315360"/>
+                    <input type="radio" name="customExpire" value="315360"/>
                     <i class="mdui-radio-icon"></i>
                         一年有效
                     </label>
 
                     <label class="mdui-radio">
-                    <input type="radio" name="customexpire" value="0" <?=$lurlNeverExpireStatus?>/>
+                    <input type="radio" name="customExpire" value="0" <?=$lurlNeverExpireStatus?>/>
                     <i class="mdui-radio-icon"></i>
                         永久有效
                     </label>

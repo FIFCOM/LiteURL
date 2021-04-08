@@ -4,23 +4,28 @@ if( !defined('LITEURL_VERSION' ) ) {
     exit();
 }
 
-function lurlRandomToken($strLength)
+function lurlRandomToken($strLength): string
 {
     $str = 'qwertyuiopasdfghjklzxcvbnm';
     $str .= 'QWERTYUIOPASDFGHJKLZXCVBNM';
     $str .= '1234567890';
     $token = '';
-    for ($it = 0;$it < $strLength;$it++) $token .= $str[random_int(0, strlen($str) - 1)];
+    for ($it = 0;$it < $strLength;$it++) try {
+        $token .= $str[random_int(0, strlen($str) - 1)];
+    } catch (Exception $e) {
+    }
     return $token;
 }
 
-function lurlQRUri($string){
+function lurlQRUri($string): string
+{
     return 'https://www.zhihu.com/qrcode?url='.urlencode($string);
 }
 
-function lurlSet($uri, $alias, $key, $expire){
+function lurlSet($uri, $alias, $key, $expire): int
+{
     if (lurlGet($alias, $key, "0") != 0) return 0;
-    if (substr($uri,0,4) != "http") return 0;
+    if (substr($uri,0,7) != "http://" && substr($uri,0,8) != "https://") return 0;
     $key = hash("ripemd128", $key);
     $alias = hash("ripemd128", $alias);
     $encryptedUri = base64_encode(openssl_encrypt($uri,'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_CRYPT_IV));
@@ -45,8 +50,8 @@ function lurlGet($alias, $key, $countpp){
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
     $result = mysqli_query($conn,"SELECT * FROM lurl WHERE alias='$alias'");
     $row = mysqli_fetch_array($result);
-    $encryptedUri = base64_decode($row['uri']); $expire = $row['expire'] - date("ymdHis"); $count = $row['count'];
-    if (!$encryptedUri) return 0; //lurlRedirectAliasDoesntExist
+    $encryptedUri = base64_decode($row['uri']); $expire = $row['expire'] - date("ymdHis");
+    if (!$encryptedUri) return 0; //lurlRedirectAliasNotExist
     mysqli_close($conn);
     $uri = openssl_decrypt($encryptedUri,'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_CRYPT_IV);
     if ($expire <= 0) {lurlDelete($rawAlias); return 0;}
@@ -56,7 +61,8 @@ function lurlGet($alias, $key, $countpp){
 }
 
 
-function lurlDelete($alias) {
+function lurlDelete($alias): int
+{
     $alias = hash("ripemd128", $alias);
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
@@ -65,7 +71,8 @@ function lurlDelete($alias) {
     return 1;
 }
 
-function lurlCount($alias) {
+function lurlCount($alias): int
+{
     $alias = hash("ripemd128", $alias);
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
@@ -78,7 +85,8 @@ function lurlCount($alias) {
     return 1;
 }
 
-function lurlIsAdmin() {
+function lurlIsAdmin(): int
+{
     return 0;
 }
 

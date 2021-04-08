@@ -3,12 +3,8 @@ require_once("config/lurlConfig.php");
 require_once("pages/lurlFunctions.php");
 $SvrName = $_SERVER['HTTP_HOST'].str_replace('/lurlRedirect.php','',$_SERVER['PHP_SELF']);
 
-$lurlRedirectAlias = isset($_REQUEST['alias'])?$_REQUEST['alias']:0;
+$lurlRedirectAlias = isset($_REQUEST['alias'])?substr($_REQUEST['alias'],1,strlen($_REQUEST['alias'])):0;
 $lurlRedirectKey = isset($_REQUEST['key'])?$_REQUEST['key']:0;
-
-if ($lurlRedirectAlias == "login") {
-    header('Location: '.$lurlTLSEncryption.$SvrName.'/lurlAdmin.php?action=login&from=redirect.php');
-}
 
 if ($lurlRedirectAlias) {
     if ($lurlRedirectKey)
