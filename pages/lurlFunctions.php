@@ -20,6 +20,7 @@ function lurlQRUri($string){
 
 function lurlSet($uri, $alias, $key, $expire){
     if (lurlGet($alias, $key, "0") != 0) return 0;
+    if (substr($uri,0,4) != "http") return 0;
     $key = hash("ripemd128", $key);
     $alias = hash("ripemd128", $alias);
     $encryptedUri = base64_encode(openssl_encrypt($uri,'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_CRYPT_IV));
@@ -75,6 +76,10 @@ function lurlCount($alias) {
     mysqli_query($conn,"UPDATE lurl SET count='$count' WHERE alias='$alias'");
     mysqli_close($conn);
     return 1;
+}
+
+function lurlIsAdmin() {
+    return 0;
 }
 
 $lurlIcon = ICON_URL?ICON_URL:"https://q.qlogo.cn/headimg_dl?dst_uin=1280874899&spec=640";

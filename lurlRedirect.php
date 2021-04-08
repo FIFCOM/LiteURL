@@ -35,5 +35,7 @@ if ($lurlRedirectAlias) {
             exit();
         }
     }
+} else {
+    header('Location: '.$lurlTLSEncryption.$SvrName.'/index.php');
 }
 ?>

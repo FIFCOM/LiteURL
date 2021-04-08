@@ -109,7 +109,7 @@ ini_set('display_errors', 0);
                     </label>
 
                     <label class="mdui-radio">
-                    <input type="radio" name="customexpire" value="0" <?=$lurl?>/>
+                    <input type="radio" name="customexpire" value="0" <?=$lurlNeverExpireStatus?>/>
                     <i class="mdui-radio-icon"></i>
                         永久有效
                     </label>

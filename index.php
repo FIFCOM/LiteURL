@@ -2,13 +2,14 @@
 require_once("config/lurlConfig.php");
 require_once("pages/lurlFunctions.php");
 $SvrName = $_SERVER['HTTP_HOST'].str_replace('/index.php','',$_SERVER['PHP_SELF']);
-$lurlDefaltCustomAlias = lurlRandomToken(LURL_SHORTEST_ALIAS_LENGTH);
+$lurlDefaltCustomAlias = lurlRandomToken(LURL_MIN_ALIAS_LENGTH);
 $lurlCustomUri = isset($_REQUEST['customuri'])?$_REQUEST['customuri']:0;
 $lurlCustomAlias = isset($_REQUEST['customalias'])?$_REQUEST['customalias']:0;
 $lurlCustomKey = isset($_REQUEST['customkey'])?$_REQUEST['customkey']:0;
 $lurlCustomExpire = isset($_REQUEST['customexpire'])?$_REQUEST['customexpire']:0;
 
 if (!$lurlCustomAlias || !$lurlCustomKey || !$lurlCustomUri || !$lurlCustomExpire) {
+    if (!lurlIsAdmin()) $lurlNeverExpireStatus = "disabled"; else $lurlNeverExpireStatus = "";
     $lurlCardMessage = '请输入您要缩短的网址';
     require_once("pages/lurlIndex.php");
     exit();

@@ -15,7 +15,7 @@ define('LURL_MAX_ALIAS_LENGTH', '16');
 /*             */
 
 /* Advanced settings */
-define('TLS_ENCRYPT', 'enable');
+define('TLS_ENCRYPT', 'disable');
 define('LURL_API_KEY', '00000000000000000000000000000000');
 define('LURL_ADMIN_PWD', '00000000000000000000000000000000');
 define('LURL_CRYPT_IV', '1234567890123456');
