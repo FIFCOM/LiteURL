@@ -10,7 +10,7 @@ $lurlCustomExpire = isset($_REQUEST['customExpire'])?$_REQUEST['customExpire']:0
 
 if (!$lurlCustomAlias || !$lurlCustomKey || !$lurlCustomUri || !$lurlCustomExpire) {
     if (!lurlIsAdmin()) $lurlNeverExpireStatus = "disabled"; else $lurlNeverExpireStatus = "";
-    $lurlCardMessage = '请输入您要缩短的网址';
+    $lurlCardMessage = base64_decode('6K+36L6T5YWl5oKo6KaB57yp55+t55qE572R5Z2A');
     require_once("pages/lurlIndex.php");
     exit();
 } else {
@@ -23,7 +23,8 @@ if (!$lurlCustomAlias || !$lurlCustomKey || !$lurlCustomUri || !$lurlCustomExpir
             // TODO lurlSet
         }
     } else {
-        if (strlen($lurlCustomAlias) < LURL_MAX_ALIAS_LENGTH 
+        if (strlen($lurlCustomAlias) > 0
+            && strlen($lurlCustomAlias) < LURL_MAX_ALIAS_LENGTH
             && strlen($lurlCustomAlias) > LURL_MIN_ALIAS_LENGTH 
             && strlen($lurlCustomUri) < 2048 
             && strlen($lurlCustomKey) < 16 
@@ -35,3 +36,8 @@ if (!$lurlCustomAlias || !$lurlCustomKey || !$lurlCustomUri || !$lurlCustomExpir
 }
 
 ?>
+
+<!--
+LiteURL
+https://github.com/FIFCOM/LiteURL
+-->

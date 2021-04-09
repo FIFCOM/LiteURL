@@ -94,3 +94,9 @@ $lurlIcon = ICON_URL?ICON_URL:"https://q.qlogo.cn/headimg_dl?dst_uin=1280874899&
 $lurlTLSEncryption = TLS_ENCRYPT == "enable"?"https://":"http://";
 $lurlPrimaryTheme = isset($_COOKIE['lurlPrimaryTheme'])?$_COOKIE['lurlPrimaryTheme']:PRIMARY_THEME;
 $lurlAccentTheme = isset($_COOKIE['lurlAccentTheme'])?$_COOKIE['lurlAccentTheme']:ACCENT_THEME;
+?>
+
+<!--
+LiteURL
+https://github.com/FIFCOM/LiteURL
+-->

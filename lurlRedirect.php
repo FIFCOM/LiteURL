@@ -22,7 +22,7 @@ if ($lurlRedirectAlias) {
     } else {
         $lurlRedirectUri = lurlGet($lurlRedirectAlias, "0", "1");
         if ($lurlRedirectUri == -1) {
-            require_once("pages/lurlRedirectKeyValidat.html.php");
+            require_once("pages/lurlRedirectKeyValidate.html.php");
             exit();
         } else if ($lurlRedirectUri){
             header('Location: '.$lurlRedirectUri);
@@ -35,3 +35,8 @@ if ($lurlRedirectAlias) {
     header('Location: '.$lurlTLSEncryption.$SvrName.'/index.php');
 }
 ?>
+
+<!--
+LiteURL
+https://github.com/FIFCOM/LiteURL
+-->

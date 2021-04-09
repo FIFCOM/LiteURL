@@ -4,3 +4,8 @@ require_once("pages/lurlFunctions.php");
 
 
 ?>
+
+<!--
+LiteURL
+https://github.com/FIFCOM/LiteURL
+-->

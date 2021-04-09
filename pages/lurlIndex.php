@@ -201,3 +201,8 @@ ini_set('display_errors', 0);
     <script><?=$lurlConsoleCopy?></script>
 </body>
 </html>
+
+<!--
+LiteURL
+https://github.com/FIFCOM/LiteURL
+-->
