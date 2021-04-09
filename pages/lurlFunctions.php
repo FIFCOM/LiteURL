@@ -51,12 +51,12 @@ function lurlGet($alias, $key, $countpp){
     $result = mysqli_query($conn,"SELECT * FROM lurl WHERE alias='$alias'");
     $row = mysqli_fetch_array($result);
     $encryptedUri = base64_decode($row['uri']); $expire = $row['expire'] - date("ymdHis");
-    if (!$encryptedUri) return 0; //lurlRedirectAliasNotExist
+    if (!$encryptedUri) return 0;
     mysqli_close($conn);
     $uri = openssl_decrypt($encryptedUri,'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_CRYPT_IV);
     if ($expire <= 0) {lurlDelete($rawAlias); return 0;}
     if ($countpp != "0") lurlCount($rawAlias);
-    if (!$uri) return -1; //lurlRedirectKeyError
+    if (!$uri) return -1;
     else return $uri;
 }
 

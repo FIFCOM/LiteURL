@@ -79,6 +79,7 @@ ini_set('display_errors', 0);
                         <div class="mdui-textfield-helper">(*必填)请加上https://或http://</div>
                     </div>
                     <div class="mdui-textfield mdui-textfield-floating-label">
+                        <i class="mdui-icon material-icons">lock</i>
                         <label class="mdui-textfield-label">访问密码</label>
                         <input class="mdui-textfield-input" type="text" name="customKey" maxlength="16"/>
                         <div class="mdui-textfield-helper">默认无密码</div>

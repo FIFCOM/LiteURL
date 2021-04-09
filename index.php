@@ -16,23 +16,25 @@ if (!$lurlCustomAlias || !$lurlCustomKey || !$lurlCustomUri || !$lurlCustomExpir
 } else {
     if (lurlIsAdmin())
     {
-        if (strlen($lurlCustomAlias) > LURL_MIN_ALIAS_LENGTH 
+        if (strlen($lurlCustomAlias) >= LURL_MIN_ALIAS_LENGTH
             && strlen($lurlCustomUri) < 2048 
             && strlen($lurlCustomKey) < 16)
         {
             // TODO lurlSet
+            $boolTemp = lurlSet($lurlCustomUri, $lurlCustomAlias, $lurlCustomKey, $lurlCustomExpire);
         }
     } else {
-        if (strlen($lurlCustomAlias) > 0
-            && strlen($lurlCustomAlias) < LURL_MAX_ALIAS_LENGTH
-            && strlen($lurlCustomAlias) > LURL_MIN_ALIAS_LENGTH 
+        if (strlen($lurlCustomAlias) < LURL_MAX_ALIAS_LENGTH
+            && strlen($lurlCustomAlias) >= LURL_MIN_ALIAS_LENGTH
             && strlen($lurlCustomUri) < 2048 
             && strlen($lurlCustomKey) < 16 
             && $lurlCustomExpire < 315360)
         {
             // TODO lurlSet
+            $boolTemp = lurlSet($lurlCustomUri, $lurlCustomAlias, $lurlCustomKey, $lurlCustomExpire);
         }
     }
+
 }
 
 ?>
