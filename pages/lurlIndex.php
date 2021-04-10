@@ -65,6 +65,20 @@ ini_set('display_errors', 0);
         <div class="mdui-toolbar-spacer"></div>
     </header>
     <div class="mdui-container doc-container">
+        <!--
+        <div class="mdui-card" style="margin-top: 15px;border-radius:10px"><br>
+            <div class="mdui-card-content" style="margin-top: -35px">
+                <div>
+                    <div class="mdui-textfield mdui-textfield-floating-label">
+                        <i class="mdui-icon material-icons">near_me</i>
+                        <label class="mdui-textfield-label">短网址</label>
+                        <input class="mdui-textfield-input" type="text" value="<?=$lurlShortURL?>"/>
+                        <div class="mdui-textfield-helper">轻点即可复制</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       -->
     <div class="mdui-card" style="margin-top: 15px;border-radius:10px">
         <div class="mdui-card-primary">
             <div class="mdui-card-primary-title"><?=SITE_NAME?> - 短网址生成</div>
@@ -74,7 +88,7 @@ ini_set('display_errors', 0);
             <div>
                 <form action="#" method="post">
                     <div class="mdui-textfield mdui-textfield-floating-label">
-                        <i class="mdui-icon material-icons">http</i>
+                        <i class="mdui-icon material-icons">add</i>
                         <label class="mdui-textfield-label">网址</label>
                         <input class="mdui-textfield-input" type="text" name="customUri" maxlength="2048"/>
                         <div class="mdui-textfield-helper">(*必填)请加上https://或http://</div>
@@ -125,6 +139,7 @@ ini_set('display_errors', 0);
             </div>
         </div>
     </div>
+
           </br><div style="text-align:center; margin: 0px auto;"><span style="color: gray;">Copyright <?=date("20y")?> <?=SITE_NAME?></span></div>
     </div>
 
