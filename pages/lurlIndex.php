@@ -74,6 +74,7 @@ ini_set('display_errors', 0);
             <div>
                 <form action="#" method="post">
                     <div class="mdui-textfield mdui-textfield-floating-label">
+                        <i class="mdui-icon material-icons">http</i>
                         <label class="mdui-textfield-label">网址</label>
                         <input class="mdui-textfield-input" type="text" name="customUri" maxlength="2048"/>
                         <div class="mdui-textfield-helper">(*必填)请加上https://或http://</div>
@@ -85,6 +86,7 @@ ini_set('display_errors', 0);
                         <div class="mdui-textfield-helper">默认无密码</div>
                     </div>
                     <div class="mdui-textfield mdui-textfield-floating-label">
+                        <i class="mdui-icon material-icons">code</i>
                         <label class="mdui-textfield-label">自定义短网址</label>
                         <input class="mdui-textfield-input" type="text" name="customAlias" value="<?=$lurlDefaultCustomAlias?>" maxlength="<?=LURL_MAX_ALIAS_LENGTH?>"/>
                         <div class="mdui-textfield-helper">不少于<?=LURL_MIN_ALIAS_LENGTH?>个字母,默认为<?=$lurlDefaultCustomAlias?></div>
