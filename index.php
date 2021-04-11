@@ -21,7 +21,7 @@ if (!$lurlCustomAlias || !$lurlCustomKey || !$lurlCustomUri || !$lurlCustomExpir
             && strlen($lurlCustomKey) < 16)
         {
             // TODO lurlSet
-            $boolTemp = lurlSet($lurlCustomUri, $lurlCustomAlias, $lurlCustomKey, $lurlCustomExpire);
+            $lurlSetStatus = lurlSet($lurlCustomUri, $lurlCustomAlias, $lurlCustomKey, $lurlCustomExpire);
         }
     } else {
         if (strlen($lurlCustomAlias) < LURL_MAX_ALIAS_LENGTH
@@ -30,8 +30,9 @@ if (!$lurlCustomAlias || !$lurlCustomKey || !$lurlCustomUri || !$lurlCustomExpir
             && strlen($lurlCustomKey) < 16 
             && $lurlCustomExpire < 315360)
         {
-            // TODO lurlSet
-            $boolTemp = lurlSet($lurlCustomUri, $lurlCustomAlias, $lurlCustomKey, $lurlCustomExpire);
+            $lurlSetStatus = lurlSet($lurlCustomUri, $lurlCustomAlias, $lurlCustomKey, $lurlCustomExpire);
+            if ($lurlSetStatus) $lurlShortURL = $lurlTLSEncryption.$SvrName.'/~'.$lurlCustomAlias;
+            require_once("pages/lurlIndex.php");
         }
     }
 

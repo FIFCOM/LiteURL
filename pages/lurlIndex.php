@@ -65,20 +65,20 @@ ini_set('display_errors', 0);
         <div class="mdui-toolbar-spacer"></div>
     </header>
     <div class="mdui-container doc-container">
-        <!--
+        <?php if (!$lurlShortURL) echo '<!--';?>
         <div class="mdui-card" style="margin-top: 15px;border-radius:10px"><br>
             <div class="mdui-card-content" style="margin-top: -35px">
                 <div>
                     <div class="mdui-textfield mdui-textfield-floating-label">
                         <i class="mdui-icon material-icons">near_me</i>
-                        <label class="mdui-textfield-label">短网址</label>
+                        <label class="mdui-textfield-label">您生成的短网址</label>
                         <input class="mdui-textfield-input" type="text" value="<?=$lurlShortURL?>"/>
-                        <div class="mdui-textfield-helper">轻点即可复制</div>
+                        <div class="mdui-textfield-helper">轻点或Ctrl+c即可复制</div>
                     </div>
                 </div>
             </div>
         </div>
-       -->
+        <?php if (!$lurlShortURL) echo '-->';?>
     <div class="mdui-card" style="margin-top: 15px;border-radius:10px">
         <div class="mdui-card-primary">
             <div class="mdui-card-primary-title"><?=SITE_NAME?> - 短网址生成</div>
@@ -86,7 +86,7 @@ ini_set('display_errors', 0);
         </div>
         <div class="mdui-card-content" style="margin-top: -35px">
             <div>
-                <form action="#" method="post">
+                <form action="/index.php#" method="post">
                     <div class="mdui-textfield mdui-textfield-floating-label">
                         <i class="mdui-icon material-icons">add</i>
                         <label class="mdui-textfield-label">网址</label>
