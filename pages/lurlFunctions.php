@@ -26,9 +26,9 @@ function lurlSet($uri, $alias, $key, $expire): int
 {
     if (lurlGet($alias, $key, "0") != 0) return 0;
     if (substr($uri,0,7) != "http://" && substr($uri,0,8) != "https://") return 0;
-    $key = hash("ripemd128", $key);
-    $alias = hash("ripemd128", $alias);
-    $encryptedUri = base64_encode(openssl_encrypt($uri,'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_CRYPT_IV));
+    //$key = hash("sha256", $key);
+    $alias = hash("sha256", $alias);
+    $encryptedUri = base64_encode(openssl_encrypt($uri,'aes-128-cbc', "$key", OPENSSL_RAW_DATA, LURL_CRYPT_IV));
     $expire = $expire?$expire+date("ymdHis"):"999999999999";
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
@@ -42,10 +42,10 @@ function lurlSet($uri, $alias, $key, $expire): int
     }
 }
 
-function lurlGet($alias, $key, $countpp){
-    $key = hash("ripemd128", $key);
+function lurlGet($alias, $key, $count){
+    //$key = hash("sha256", $key);
     $rawAlias = $alias;
-    $alias = hash("ripemd128", $alias);
+    $alias = hash("sha256", $alias);
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
     $result = mysqli_query($conn,"SELECT * FROM lurl WHERE alias='$alias'");
@@ -53,9 +53,9 @@ function lurlGet($alias, $key, $countpp){
     $encryptedUri = base64_decode($row['uri']); $expire = $row['expire'] - date("ymdHis");
     if (!$encryptedUri) return 0;
     mysqli_close($conn);
-    $uri = openssl_decrypt($encryptedUri,'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_CRYPT_IV);
+    $uri = openssl_decrypt(base64_decode($row['uri']),'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_CRYPT_IV);
     if ($expire <= 0) {lurlDelete($rawAlias); return 0;}
-    if ($countpp != "0") lurlCount($rawAlias);
+    if ($count != "0") lurlCount($rawAlias);
     if (!$uri) return -1;
     else return $uri;
 }
