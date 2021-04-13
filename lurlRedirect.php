@@ -4,7 +4,7 @@ require_once("pages/lurlFunctions.php");
 $SvrName = $_SERVER['HTTP_HOST'].str_replace('/lurlRedirect.php','',$_SERVER['PHP_SELF']);
 
 $lurlRedirectAlias = isset($_REQUEST['alias'])?substr($_REQUEST['alias'],1,strlen($_REQUEST['alias'])):0;
-$lurlRedirectKey = isset($_REQUEST['key'])?$_REQUEST['key']:0;
+$lurlRedirectKey = isset($_REQUEST['key']) && strlen($_REQUEST['key']) > 0?$_REQUEST['key']:0;
 
 if ($lurlRedirectAlias) {
     if ($lurlRedirectKey)
@@ -20,7 +20,7 @@ if ($lurlRedirectAlias) {
             exit();
         }
     } else {
-        $lurlRedirectUri = lurlGet($lurlRedirectAlias, "0", "1");
+        $lurlRedirectUri = lurlGet($lurlRedirectAlias, "1", "1");
         if ($lurlRedirectUri == -1) {
             require_once("pages/lurlRedirectKeyValidate.html.php");
             exit();
