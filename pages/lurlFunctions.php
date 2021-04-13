@@ -26,8 +26,8 @@ function lurlSet($uri, $alias, $key, $expire): int
 {
     if (lurlGet($alias, $key, "0") != 0) return 0;
     if (substr($uri,0,7) != "http://" && substr($uri,0,8) != "https://") return 0;
-    $key = hash("sha256", $key);
-    $alias = hash("sha256", $alias);
+    $key = hash("ripemd128", $key);
+    $alias = hash("ripemd128", $alias);
     $encryptedUri = base64_encode(openssl_encrypt($uri,'aes-128-cbc', "$key", OPENSSL_RAW_DATA, LURL_CRYPT_IV));
     $expire = $expire?$expire+date("ymdHis"):"999999999999";
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
@@ -43,9 +43,9 @@ function lurlSet($uri, $alias, $key, $expire): int
 }
 
 function lurlGet($alias, $key, $count){
-    $key = hash("sha256", $key);
+    $key = hash("ripemd128", $key);
     $rawAlias = $alias;
-    $alias = hash("sha256", $alias);
+    $alias = hash("ripemd128", $alias);
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
     $result = mysqli_query($conn,"SELECT * FROM lurl WHERE alias='$alias'");
