@@ -29,7 +29,7 @@ function lurlSet($uri, $alias, $key, $expire): int
     $key = hash("ripemd128", $key);
     $alias = hash("ripemd128", $alias);
     $encryptedUri = base64_encode(openssl_encrypt($uri, 'aes-128-cbc', "$key", OPENSSL_RAW_DATA, LURL_CRYPT_IV));
-    $expire = $expire ? $expire + date("ymdHis") : "999999999999";
+    $expire = $expire ? ($expire + date("y") * 366 + date("m") * 31 + date("d")) : "999999";
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
     $sql = "INSERT INTO lurl (uri, alias, expire, count) VALUES ('$encryptedUri', '$alias', '$expire', 0)";
@@ -52,7 +52,7 @@ function lurlGet($alias, $key)
     $result = mysqli_query($conn, "SELECT * FROM lurl WHERE alias='$alias'");
     $row = mysqli_fetch_array($result);
     $encryptedUri = base64_decode($row['uri']);
-    $expire = $row['expire'] - date("ymdHis");
+    $expire = $row['expire'] - date("y") * 366 + date("m") * 31 + date("d");
     if (!$encryptedUri) return 0;
     mysqli_close($conn);
     $uri = openssl_decrypt(base64_decode($row['uri']), 'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_CRYPT_IV);
@@ -109,6 +109,7 @@ $lurlIcon = ICON_URL ?: "https://q.qlogo.cn/headimg_dl?dst_uin=1280874899&spec=6
 $lurlTLSEncryption = TLS_ENCRYPT == "enable" ? "https://" : "http://";
 $lurlPrimaryTheme = $_COOKIE['lurlPrimaryTheme'] ?? PRIMARY_THEME;
 $lurlAccentTheme = $_COOKIE['lurlAccentTheme'] ?? ACCENT_THEME;
+$lurlConsoleCopy = 'console.log(\'%cLiteURL  %c  ' . LITEURL_VERSION . '%cGNU GPL v3\', \'color: #fff; background: #0D47A1; font-size: 15px;border-radius:5px 0 0 5px;padding:10px 0 10px 20px;\',\'color: #fff; background: #42A5F5; font-size: 15px;border-radius:0;padding:10px 15px 10px 0px;\',\'color: #fff; background: #00695C; font-size: 15px;border-radius:0 5px 5px 0;padding:10px 20px 10px 15px;\');console.log(\'%chttps://github.com/FIFCOM/LiteURL\', \'font-size: 12px;border-radius:5px;padding:3px 10px 3px 10px;border:1px solid #00695C;\');';
 ?>
 
 <!--

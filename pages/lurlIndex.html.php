@@ -123,19 +123,19 @@ ini_set('display_errors', 0);
                     </br>
 
                     <label class="mdui-radio">
-                        <input type="radio" name="customExpire" value="6408"/>
+                        <input type="radio" name="customExpire" value="8"/>
                         <i class="mdui-radio-icon"></i>
-                        7天有效
+                        一周有效
                     </label>
 
                     <label class="mdui-radio">
-                        <input type="radio" name="customExpire" value="25920" checked/>
+                        <input type="radio" name="customExpire" value="31" checked/>
                         <i class="mdui-radio-icon"></i>
-                        30天有效
+                        一个月有效
                     </label>
 
                     <label class="mdui-radio">
-                        <input type="radio" name="customExpire" value="315360"/>
+                        <input type="radio" name="customExpire" value="366"/>
                         <i class="mdui-radio-icon"></i>
                         一年有效
                     </label>
