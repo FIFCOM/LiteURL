@@ -8,24 +8,27 @@ $lurlRedirectKey = isset($_REQUEST['key']) && strlen($_REQUEST['key']) > 0 ? $_R
 
 if ($lurlRedirectAlias) {
     if ($lurlRedirectKey) {
-        $lurlRedirectUri = lurlGet($lurlRedirectAlias, $lurlRedirectKey, "1");
+        $lurlRedirectUri = lurlGet($lurlRedirectAlias, $lurlRedirectKey);
         if ($lurlRedirectUri == -1) {
-            require_once("pages/lurlRedirectKeyError.html.php");
-            exit();
-        } else if ($lurlRedirectUri) {
-            header('Location: ' . $lurlRedirectUri);
-        } else {
-            require_once("pages/lurlRedirectAliasDoesntExist.html.php");
-            exit();
-        }
-    } else {
-        $lurlRedirectUri = lurlGet($lurlRedirectAlias, "1", "1");
-        if ($lurlRedirectUri == -1) {
+            $lurlCardMessage = "访问密码错误，请重试";
             require_once("pages/lurlRedirectKeyValidate.html.php");
             exit();
         } else if ($lurlRedirectUri) {
             header('Location: ' . $lurlRedirectUri);
         } else {
+            require_once("pages/lurlRedirectAliasNotExist.html.php");
+            exit();
+        }
+    } else {
+        $lurlRedirectUri = lurlGet($lurlRedirectAlias, "1");
+        if ($lurlRedirectUri == -1) {
+            $lurlCardMessage = "请输入访问密码";
+            require_once("pages/lurlRedirectKeyValidate.html.php");
+            exit();
+        } else if ($lurlRedirectUri) {
+            header('Location: ' . $lurlRedirectUri);
+        } else {
+
             require_once("pages/lurlRedirectAliasNotExist.html.php");
             exit();
         }

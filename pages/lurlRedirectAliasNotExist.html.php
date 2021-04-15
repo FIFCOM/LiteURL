@@ -20,10 +20,10 @@ ini_set('display_errors', 0);
             window.scrollTo(0, 1);
         } </script>
     <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css"
-        integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw"
-        crossorigin="anonymous"
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/css/mdui.min.css"
+            integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw"
+            crossorigin="anonymous"
     />
     <style>
         html,
@@ -70,23 +70,15 @@ ini_set('display_errors', 0);
 <div class="mdui-container doc-container">
     <div class="mdui-card" style="margin-top: 15px;border-radius:10px">
         <div class="mdui-card-primary">
-            <div class="mdui-card-primary-title"><?= SITE_NAME ?> - 该短链受密码保护</div>
-            <div class="mdui-card-primary-subtitle" style="margin-top: 5px"><?= $lurlCardMessage ?></div>
+            <div class="mdui-card-primary-title"><?= SITE_NAME ?> - 短链不存在或已失效</div>
         </div>
         <div class="mdui-card-content" style="margin-top: -35px">
             <div>
-                <form action="/~<?= $lurlRedirectAlias ?>" method="post">
-                    <div class="mdui-textfield mdui-textfield-floating-label">
-                        <i class="mdui-icon material-icons">lock</i>
-                        <label class="mdui-textfield-label">访问密码</label>
-                        <input class="mdui-textfield-input" type="text" name="key" maxlength="16"/>
-                        <div class="mdui-textfield-helper">请输入[<?= $lurlRedirectAlias ?>]的访问密码</div>
-                    </div>
-                    </br>
-                    <p><input style="float: right;" class="mdui-btn mdui-color-theme-accent mdui-ripple" id="mode"
-                              type="submit" value="确定"></p>
-                    </br>
-                </form>
+                </br>
+                <p><a href="<?php echo $lurlTLSEncryption . $SvrName . '/index.php'; ?>" style="float: right;"
+                      class="mdui-btn mdui-color-theme-accent mdui-ripple" id="mode"
+                    >返回首页</a></p>
+                </br>
 
                 </br>
 
@@ -96,13 +88,13 @@ ini_set('display_errors', 0);
 
     </br>
     <div style="text-align:center; margin: 0px auto;"><span
-            style="color: gray;">Copyright <?= date("20y") ?> <?= SITE_NAME ?></span></div>
+                style="color: gray;">Copyright <?= date("20y") ?> <?= SITE_NAME ?></span></div>
 </div>
 
 <script
-    src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
-    integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
-    crossorigin="anonymous"
+        src="https://cdn.jsdelivr.net/npm/mdui@1.0.1/dist/js/mdui.min.js"
+        integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
+        crossorigin="anonymous"
 ></script>
 <script>
     !function (n, e) {

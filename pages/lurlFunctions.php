@@ -65,7 +65,7 @@ function lurlGet($alias, $key)
     else return $uri;
 }
 
-function lurlIsAliasExist($alias): bool
+function lurlIsAliasExist($alias): int
 {
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
@@ -73,7 +73,7 @@ function lurlIsAliasExist($alias): bool
     $result = mysqli_query($conn, "SELECT * FROM lurl WHERE alias='$alias'");
     $row = mysqli_fetch_array($result);
     $encryptedUri = base64_decode($row['uri']);
-    if ($encryptedUri) return true; else return false;
+    if ($encryptedUri) return 1; else return 0;
 }
 
 function lurlDelete($alias): int
