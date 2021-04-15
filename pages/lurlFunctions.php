@@ -24,7 +24,7 @@ function lurlQRUri($string): string
 
 function lurlSet($uri, $alias, $key, $expire): int
 {
-    if (lurlGet($alias, $key) != 0) return 0;
+    if (lurlIsAliasExist($alias)) return 0;
     if (substr($uri, 0, 7) != "http://" && substr($uri, 0, 8) != "https://") return 0;
     $key = hash("ripemd128", $key);
     $alias = hash("ripemd128", $alias);
@@ -65,9 +65,15 @@ function lurlGet($alias, $key)
     else return $uri;
 }
 
-function lurlIsAliasExist()
+function lurlIsAliasExist($alias): bool
 {
-
+    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
+    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
+    $alias = hash("ripemd128", $alias);
+    $result = mysqli_query($conn, "SELECT * FROM lurl WHERE alias='$alias'");
+    $row = mysqli_fetch_array($result);
+    $encryptedUri = base64_decode($row['uri']);
+    if ($encryptedUri) return true; else return false;
 }
 
 function lurlDelete($alias): int
