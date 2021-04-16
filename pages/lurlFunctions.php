@@ -72,8 +72,7 @@ function lurlIsAliasExist($alias): int
     $alias = hash("ripemd128", $alias);
     $result = mysqli_query($conn, "SELECT * FROM lurl WHERE alias='$alias'");
     $row = mysqli_fetch_array($result);
-    $encryptedUri = base64_decode($row['uri']);
-    if ($encryptedUri) return 1; else return 0;
+    if ($row) return 1; else return 0;
 }
 
 function lurlDelete($alias): int
