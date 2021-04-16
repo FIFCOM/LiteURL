@@ -64,13 +64,13 @@ ini_set('display_errors', 0);
             opacity: .5
         }
     </style>
-    <title><?= SITE_NAME ?> - 短网址生成</title>
+    <title><?= SITE_NAME ?></title>
 </head>
 <body class="mdui-appbar-with-toolbar mdui-theme-primary-<?= $lurlPrimaryTheme ?> mdui-theme-accent-<?= $lurlAccentTheme ?> mdui-theme-layout-auto mdui-loaded">
 <div class="mdui-container doc-container">
     <div class="mdui-card" style="margin-top: 15px;border-radius:10px">
         <div class="mdui-card-primary">
-            <div class="mdui-card-primary-title"><?= SITE_NAME ?> - 该短链受密码保护</div>
+            <div class="mdui-card-primary-title">该短链受密码保护</div>
             <div class="mdui-card-primary-subtitle" style="margin-top: 5px"><?= $lurlCardMessage ?></div>
         </div>
         <div class="mdui-card-content" style="margin-top: -35px">
@@ -80,7 +80,7 @@ ini_set('display_errors', 0);
                         <i class="mdui-icon material-icons">lock</i>
                         <label class="mdui-textfield-label">访问密码</label>
                         <input class="mdui-textfield-input" type="text" name="key" maxlength="16"/>
-                        <div class="mdui-textfield-helper">请输入[<?= $lurlRedirectAlias ?>]的访问密码</div>
+                        <div class="mdui-textfield-helper">请输入 <?= $lurlRedirectAlias ?> 的访问密码</div>
                     </div>
                     </br>
                     <p><input style="float: right;" class="mdui-btn mdui-color-theme-accent mdui-ripple" id="mode"

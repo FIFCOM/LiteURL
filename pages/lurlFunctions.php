@@ -51,6 +51,7 @@ function lurlGet($alias, $key)
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
     $result = mysqli_query($conn, "SELECT * FROM lurl WHERE alias='$alias'");
     $row = mysqli_fetch_array($result);
+    if (!$row) return 0;
     $encryptedUri = base64_decode($row['uri']);
     $expire = $row['expire'] - date("y") * 366 + date("m") * 31 + date("d");
     if (!$encryptedUri) return 0;
