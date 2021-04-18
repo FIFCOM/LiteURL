@@ -102,17 +102,28 @@ function lurlCount($alias): int
     return 1;
 }
 
-function lurlUserLevel(): int
+function lurlUserPermissionGroup($username): int
 {
-    return 0;
+    $username = hash("ripemd128", $username);
+    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
+    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
+    $result = mysqli_query($conn, "SELECT * FROM lurl_username WHERE username='$username'");
+    $row = mysqli_fetch_array($result);
+    mysqli_close($conn);
+    $pg = $row['permission_group'] + 1;
+    if (!$pg) return 0;
+    else return $pg;
 //  SuperAdmin : 3
 //  Admin : 2
 //  User : 1
 //  Guest (not logged in) : 0
 }
 
-function lurlUserGetApiToken(): string
+function lurlUserGetApiToken($username, $password): string
 {
+    $username = hash("ripemd128", $username);
+    $password = hash("ripemd128", $password);
+
     return "string";
 }
 
