@@ -93,9 +93,9 @@ function lurlCount($alias): int
     $alias = hash("ripemd128", $alias);
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT * FROM lurl WHERE alias='$alias'");
-    $row = mysqli_fetch_array($result);
-    $count = $row['count'] + 1;
+    $result = mysqli_query($conn, "SELECT count FROM lurl WHERE alias='$alias'");
+    $row = mysqli_fetch_assoc($result);
+    $count = $row["count"] + 1;
     if (!$count) return 0;
     mysqli_query($conn, "UPDATE lurl SET count='$count' WHERE alias='$alias'");
     mysqli_close($conn);
@@ -107,10 +107,10 @@ function lurlUserPermissionGroup($username): int
     $username = hash("ripemd128", $username);
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT * FROM lurl_username WHERE username='$username'");
-    $row = mysqli_fetch_array($result);
+    $result = mysqli_query($conn, "SELECT permission_group FROM lurl_username WHERE username='$username'");
+    //$row = mysqli_fetch_array($result);
     mysqli_close($conn);
-    $pg = $row['permission_group'] + 1;
+    $pg = $result;
     if (!$pg) return 0;
     else return $pg;
 //  SuperAdmin : 3
