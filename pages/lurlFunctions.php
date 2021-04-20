@@ -94,7 +94,7 @@ function lurlCount($alias): int
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
     $result = mysqli_query($conn, "SELECT count FROM lurl WHERE alias='$alias'");
-    $row = mysqli_fetch_assoc($result);
+    $row = mysqli_fetch_array($result);
     $count = $row["count"] + 1;
     if (!$count) return 0;
     mysqli_query($conn, "UPDATE lurl SET count='$count' WHERE alias='$alias'");
@@ -108,11 +108,10 @@ function lurlUserPermissionGroup($username): int
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
     $result = mysqli_query($conn, "SELECT permission_group FROM lurl_username WHERE username='$username'");
-    //$row = mysqli_fetch_array($result);
+    $row = mysqli_fetch_array($result);
     mysqli_close($conn);
-    $pg = $result;
-    if (!$pg) return 0;
-    else return $pg;
+    if (!$row) return 0;
+    return $row["permission_group"];;
 //  SuperAdmin : 3
 //  Admin : 2
 //  User : 1
@@ -123,8 +122,13 @@ function lurlUserGetApiToken($username, $password): string
 {
     $username = hash("ripemd128", $username);
     $password = hash("ripemd128", $password);
-
-    return "string";
+    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
+    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
+    $result = mysqli_query($conn, "SELECT api_token FROM lurl_username WHERE username='$username', password='$password'");
+    $row = mysqli_fetch_array($result);
+    mysqli_close($conn);
+    if (!$row) return 0;
+    else return $row["api_token"];
 }
 
 function lurlUserLogin(): int
@@ -132,8 +136,11 @@ function lurlUserLogin(): int
     return 0;
 }
 
-function lurlUserReg(): int
+function lurlUserReg($username, $password): int
 {
+    $api_token = hash("ripemd128", lurlRandomToken(64));
+    $username = hash("ripemd128", $username);
+    $password = hash("ripemd128", $password);
     return 0;
 }
 
