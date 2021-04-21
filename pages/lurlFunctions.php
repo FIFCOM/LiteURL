@@ -136,11 +136,26 @@ function lurlUserLogin(): int
     return 0;
 }
 
-function lurlUserReg($username, $password): int
+function lurlUserReg($username, $password, $permission_group): int
 {
-    $api_token = hash("ripemd128", lurlRandomToken(64));
+    $api_token = hash("ripemd128", lurlRandomToken(32));
     $username = hash("ripemd128", $username);
-    $password = hash("ripemd128", $password);
+    $password = hash("ripemd128", $password . $username);
+    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
+    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
+    $result = mysqli_query($conn, "SELECT * FROM lurl_username WHERE username='$username', password='$password'");
+    $row = mysqli_fetch_array($result);
+    if (!$row) {
+        $sql = "INSERT INTO lurl (username, password, permission_group, api_token) VALUES ('$username', '$password', '$permission_group', '$api_token')";
+        if ($conn->query($sql) === TRUE) {
+            mysqli_close($conn);
+            return 1;
+        } else {
+            mysqli_close($conn);
+            return 0;
+        }
+    }
+    mysqli_close($conn);
     return 0;
 }
 
