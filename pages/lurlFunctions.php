@@ -107,10 +107,10 @@ function lurlUserPermissionGroup($username): int
     $username = hash("ripemd128", $username);
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT permission_group FROM lurl_username WHERE username='$username'");
+    $result = mysqli_query($conn, "SELECT * FROM lurl_username WHERE username='$username'");
+    if (!$result) return 0;
     $row = mysqli_fetch_array($result);
     mysqli_close($conn);
-    if (!$row) return 0;
     return $row["permission_group"];;
 //  SuperAdmin : 3
 //  Admin : 2
@@ -118,17 +118,17 @@ function lurlUserPermissionGroup($username): int
 //  Guest (not logged in) : 0
 }
 
-function lurlUserGetApiToken($username, $password): string
+function lurlGetApiToken($username, $password)
 {
     $username = hash("ripemd128", $username);
-    $password = hash("ripemd128", $password);
+    $password = hash("ripemd128", $password . $username);
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT api_token FROM lurl_username WHERE username='$username', password='$password'");
+    $result = mysqli_query($conn, "SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
+    if (!$result) return 0;
     $row = mysqli_fetch_array($result);
     mysqli_close($conn);
-    if (!$row) return 0;
-    else return $row["api_token"];
+    return $row["api_token"];
 }
 
 function lurlUserLogin(): int
@@ -143,10 +143,9 @@ function lurlUserReg($username, $password, $permission_group): int
     $password = hash("ripemd128", $password . $username);
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT * FROM lurl_username WHERE username='$username', password='$password'");
-    $row = mysqli_fetch_array($result);
-    if (!$row) {
-        $sql = "INSERT INTO lurl (username, password, permission_group, api_token) VALUES ('$username', '$password', '$permission_group', '$api_token')";
+    $result = mysqli_query($conn, "SELECT * FROM lurl_userdata WHERE username='$username', password='$password'");
+    if (!$result) {
+        $sql = "INSERT INTO lurl_userdata (username, password, permission_group, api_token) VALUES ('$username', '$password', '$permission_group', '$api_token')";
         if ($conn->query($sql) === TRUE) {
             mysqli_close($conn);
             return 1;
