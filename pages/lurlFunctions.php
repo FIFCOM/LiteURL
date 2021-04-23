@@ -17,12 +17,10 @@ function lurlRandomToken($strLength): string
     return $token;
 }
 
-/*
 function lurlQRUri($string): string
 {
     return 'https://www.zhihu.com/qrcode?url=' . urlencode($string);
 }
-*/
 
 function lurlSet($uri, $alias, $key, $expire): int
 {
@@ -112,10 +110,6 @@ function lurlUserPermissionGroup($username): int
     $row = mysqli_fetch_array($result);
     mysqli_close($conn);
     return $row["permission_group"];;
-//  SuperAdmin : 3
-//  Admin : 2
-//  User : 1
-//  Guest (not logged in) : 0
 }
 
 function lurlGetApiToken($username, $password)
@@ -131,8 +125,18 @@ function lurlGetApiToken($username, $password)
     return $row["api_token"];
 }
 
-function lurlUserLogin(): int
+function lurlRenewApiToken($username, $password)
 {
+    $username = hash("ripemd128", $username);
+    $password = hash("ripemd128", $password . $username);
+    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
+
+}
+
+function lurlUserLogin($username, $password): int
+{
+    $username = hash("ripemd128", $username);
+    $password = hash("ripemd128", $password . $username);
     return 0;
 }
 
@@ -164,8 +168,3 @@ $lurlPrimaryTheme = $_COOKIE['lurlPrimaryTheme'] ?? PRIMARY_THEME;
 $lurlAccentTheme = $_COOKIE['lurlAccentTheme'] ?? ACCENT_THEME;
 $lurlConsoleCopy = 'console.log(\'%cLiteURL  %c  ' . LITEURL_VERSION . '%cGNU GPL v3\', \'color: #fff; background: #0D47A1; font-size: 15px;border-radius:5px 0 0 5px;padding:10px 0 10px 20px;\',\'color: #fff; background: #42A5F5; font-size: 15px;border-radius:0;padding:10px 15px 10px 0px;\',\'color: #fff; background: #00695C; font-size: 15px;border-radius:0 5px 5px 0;padding:10px 20px 10px 15px;\');console.log(\'%c https://github.com/FIFCOM/LiteURL\', \'font-size: 12px;border-radius:5px;padding:3px 10px 3px 10px;border:1px solid #00695C;\');';
 ?>
-
-<!--
-LiteURL
-https://github.com/FIFCOM/LiteURL
--->
