@@ -130,14 +130,30 @@ function lurlRenewApiToken($username, $password)
     $username = hash("ripemd128", $username);
     $password = hash("ripemd128", $password . $username);
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
-
+    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
+    $result = mysqli_query($conn, "SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
+    $row = mysqli_fetch_array($result);
+    if (!$row) return 0;
+    $api_token = hash("ripemd128", lurlRandomToken(32));
+    mysqli_query($conn, "UPDATE lurl_userdata SET api_token='$api_token' WHERE username='$username' AND password='$password'");
+    mysqli_close($conn);
+    return $api_token;
 }
 
-function lurlUserLogin($username, $password): int
+function lurlUserLogin($username, $password, $client_ip): int
 {
+    $rawUsername = $username;
+    $rawPassword = $password;
     $username = hash("ripemd128", $username);
     $password = hash("ripemd128", $password . $username);
+    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
+    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
+    $result = mysqli_query($conn, "SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
+    $row = mysqli_fetch_array($result);
+    if (!$row) return 0;
     return 0;
+    // return encrypt_once("!".rawUsername."?".rawPassword."$",      pwd=hash_once($client_ip)) -----> base64_encode   ---->    cookie :  lurl_slt   ----> expire: 433200 (second) = 12hours
+    // rawU/P = hash_once($_REQUEST['U/P'])/
 }
 
 function lurlUserReg($username, $password, $permission_group): int
@@ -147,8 +163,9 @@ function lurlUserReg($username, $password, $permission_group): int
     $password = hash("ripemd128", $password . $username);
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT * FROM lurl_userdata WHERE username='$username', password='$password'");
-    if (!$result) {
+    $result = mysqli_query($conn, "SELECT * FROM lurl_userdata WHERE username='$username'");
+    $row = mysqli_fetch_array($result);
+    if (!$row) {
         $sql = "INSERT INTO lurl_userdata (username, password, permission_group, api_token) VALUES ('$username', '$password', '$permission_group', '$api_token')";
         if ($conn->query($sql) === TRUE) {
             mysqli_close($conn);
@@ -167,4 +184,3 @@ $lurlTLSEncryption = TLS_ENCRYPT == "enable" ? "https://" : "http://";
 $lurlPrimaryTheme = $_COOKIE['lurlPrimaryTheme'] ?? PRIMARY_THEME;
 $lurlAccentTheme = $_COOKIE['lurlAccentTheme'] ?? ACCENT_THEME;
 $lurlConsoleCopy = 'console.log(\'%cLiteURL  %c  ' . LITEURL_VERSION . '%cGNU GPL v3\', \'color: #fff; background: #0D47A1; font-size: 15px;border-radius:5px 0 0 5px;padding:10px 0 10px 20px;\',\'color: #fff; background: #42A5F5; font-size: 15px;border-radius:0;padding:10px 15px 10px 0px;\',\'color: #fff; background: #00695C; font-size: 15px;border-radius:0 5px 5px 0;padding:10px 20px 10px 15px;\');console.log(\'%c https://github.com/FIFCOM/LiteURL\', \'font-size: 12px;border-radius:5px;padding:3px 10px 3px 10px;border:1px solid #00695C;\');';
-?>
