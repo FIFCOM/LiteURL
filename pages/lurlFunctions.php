@@ -151,9 +151,7 @@ function lurlUserLogin($username, $password, $client_ip): int
     $result = mysqli_query($conn, "SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
     $row = mysqli_fetch_array($result);
     if (!$row) return 0;
-    return 0;
-    // return encrypt_once("!".rawUsername."?".rawPassword."$",      pwd=hash_once($client_ip)) -----> base64_encode   ---->    cookie :  lurl_slt   ----> expire: 433200 (second) = 12hours
-    // rawU/P = hash_once($_REQUEST['U/P'])/
+    else return base64_encode(openssl_encrypt("!$rawUsername" . "?" . "$rawPassword" . '$', 'aes-128-cbc', hash("ripemd128", $client_ip), OPENSSL_RAW_DATA, LURL_CRYPT_IV));;
 }
 
 function lurlUserReg($username, $password, $permission_group): int
