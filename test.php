@@ -2,7 +2,6 @@
 require_once("config/lurlConfig.php");
 require_once("pages/lurlFunctions.php");
 
-echo lurlUserReg("usr", "pwd", "3");
 ?>
 
 <!--

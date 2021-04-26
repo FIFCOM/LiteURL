@@ -109,7 +109,7 @@ function lurlUserPermissionGroup($username): int
     if (!$result) return 0;
     $row = mysqli_fetch_array($result);
     mysqli_close($conn);
-    return $row["permission_group"];;
+    return $row["permission_group"];
 }
 
 function lurlGetApiToken($username, $password)
@@ -140,7 +140,7 @@ function lurlRenewApiToken($username, $password)
     return $api_token;
 }
 
-function lurlUserLogin($username, $password, $client_ip): int
+function lurlUserLogin($username, $password)
 {
     $rawUsername = $username;
     $rawPassword = $password;
@@ -151,7 +151,7 @@ function lurlUserLogin($username, $password, $client_ip): int
     $result = mysqli_query($conn, "SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
     $row = mysqli_fetch_array($result);
     if (!$row) return 0;
-    else return base64_encode(openssl_encrypt("!$rawUsername" . "?" . "$rawPassword" . '$', 'aes-128-cbc', hash("ripemd128", $client_ip), OPENSSL_RAW_DATA, LURL_CRYPT_IV));;
+    else return base64_encode(openssl_encrypt("!$rawUsername" . "?" . "$rawPassword" . '$', 'aes-128-cbc', hash("ripemd128", $_SERVER['REMOTE_ADDR']), OPENSSL_RAW_DATA, LURL_CRYPT_IV));;
 }
 
 function lurlUserReg($username, $password, $permission_group): int
