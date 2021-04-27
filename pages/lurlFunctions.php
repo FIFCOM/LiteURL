@@ -177,6 +177,28 @@ function lurlUserReg($username, $password, $permission_group): int
     return 0;
 }
 
+function lurlUserDelete($username, $password): int
+{
+    $username = hash("ripemd128", $username);
+    $password = hash("ripemd128", $password . $username);
+    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
+    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
+    $result = mysqli_query($conn, "SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
+    $row = mysqli_fetch_array($result);
+    if ($row) {
+        $sql = "DELETE FROM lurl_userdata WHERE username='$username' AND password='$password'";
+        if ($conn->query($sql) === TRUE) {
+            mysqli_close($conn);
+            return 1;
+        } else {
+            mysqli_close($conn);
+            return 0;
+        }
+    }
+    mysqli_close($conn);
+    return 0;
+}
+
 $lurlIcon = ICON_URL ?: "https://q.qlogo.cn/headimg_dl?dst_uin=1280874899&spec=640";
 $lurlTLSEncryption = TLS_ENCRYPT == "enable" ? "https://" : "http://";
 $lurlPrimaryTheme = $_COOKIE['lurlPrimaryTheme'] ?? PRIMARY_THEME;
