@@ -70,7 +70,7 @@ ini_set('display_errors', 0);
 <header class="mdui-appbar mdui-appbar-fixed">
     <div class="mdui-toolbar mdui-color-theme">
         <a href="./" class="mdui-typo-headline"><?= SITE_NAME ?></a>
-        <a href="./login" style="position: absolute; right: 5px; border-radius: 100%"
+        <a href="./login.php" style="position: absolute; right: 5px; border-radius: 100%"
            class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-purple"
            mdui-tooltip="{content: '登录', position: 'bottom'}"><i class="mdui-icon material-icons">account_circle</i></a>
     </div>
@@ -123,7 +123,7 @@ ini_set('display_errors', 0);
                     </br>
 
                     <label class="mdui-radio">
-                        <input type="radio" name="customExpire" value="8"/>
+                        <input type="radio" name="customExpire" value="7"/>
                         <i class="mdui-radio-icon"></i>
                         一周有效
                     </label>

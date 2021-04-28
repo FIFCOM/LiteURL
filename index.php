@@ -6,7 +6,6 @@ $lurlDefaultCustomAlias = lurlRandomToken(LURL_MIN_ALIAS_LENGTH);
 $lurlCustomUri = $_REQUEST['customUri'] ?? 0;
 $lurlCustomAlias = $_REQUEST['customAlias'] ?? 0;
 $lurlCustomKey = isset($_REQUEST['customKey']) && strlen($_REQUEST['customKey']) > 0 ? $_REQUEST['customKey'] : "1";
-//strlen($_REQUEST['customKey']) > 0 :: 5b2TJF9SRVFVRVNUWydjdXN0b21LZXknXeS4uuepuuaXtmlzc2V0KCRfUkVRVUVTVFsnY3VzdG9tS2V5J10p5LuN5Li655yf77yM5omA5Lul6KaB55Soc3RybGVu5YaN5Yik5pat5LiA5qyh
 $lurlCustomExpire = $_REQUEST['customExpire'] ?? 0;
 if (!lurlUserPermissionGroup("test")) $lurlNeverExpireStatus = "disabled"; else $lurlNeverExpireStatus = "";
 
@@ -40,7 +39,6 @@ if (!$lurlCustomAlias || !$lurlCustomUri || !$lurlCustomExpire) {
         require_once("pages/lurlIndex.html.php");
         exit();
     }
-
 }
 
 ?>
