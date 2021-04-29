@@ -1,6 +1,6 @@
 <?php
-require_once("config/lurlConfig.php");
-require_once("pages/lurlFunctions.php");
+require_once("config/config.php");
+require_once("pages/functions.php");
 $SvrName = $_SERVER['HTTP_HOST'] . str_replace('/index.php', '', $_SERVER['PHP_SELF']);
 $lurlDefaultCustomAlias = lurlRandomToken(LURL_MIN_ALIAS_LENGTH);
 $lurlCustomUri = $_REQUEST['customUri'] ?? 0;
@@ -11,7 +11,7 @@ if (!lurlUserPermissionGroup("test")) $lurlNeverExpireStatus = "disabled"; else 
 
 if (!$lurlCustomAlias || !$lurlCustomUri || !$lurlCustomExpire) {
     $lurlCardMessage = base64_decode('6K+36L6T5YWl5oKo6KaB57yp55+t55qE572R5Z2A');
-    require_once("pages/lurlIndex.html.php");
+    require_once("pages/index.html.php");
     exit();
 } else {
     if (lurlUserPermissionGroup("test")) {
@@ -36,7 +36,7 @@ if (!$lurlCustomAlias || !$lurlCustomUri || !$lurlCustomExpire) {
         } else {
             $lurlCardMessage = base64_decode('6ZSZ6K+v77yM6K+36YeN5paw6L6T5YWl5oKo6KaB57yp55+t55qE572R5Z2A');
         }
-        require_once("pages/lurlIndex.html.php");
+        require_once("pages/index.html.php");
         exit();
     }
 }
