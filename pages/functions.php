@@ -17,6 +17,29 @@ function lurlRandomToken($strLength): string
     return $token;
 }
 
+/**
+ * 执行SQL语句, 返回数组
+ * @param $statement string
+ * @return array
+ */
+function lurlExecSqlStmt(string $statement): array
+{
+    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
+    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
+    $result = mysqli_query($conn, $statement);
+    $res['length'] = mysqli_num_rows($result);
+    if ($res['length'] === 0) {
+        $res['result'] = null;
+    } else {
+        for ($l = 0; $row = mysqli_fetch_array($result); $l++) {
+            foreach ($row as $key => $value) {
+                $res['result'][$l]['$key'] = $value;
+            }
+        }
+    }
+    return $res;
+}
+
 function lurlQRUri($string): string
 {
     return 'https://www.zhihu.com/qrcode?url=' . urlencode($string);

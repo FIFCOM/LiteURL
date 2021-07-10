@@ -11,7 +11,7 @@ ini_set('display_errors', 0);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="keywords" content="LiteURL developed by FIFCOM"/>
-    <link rel="shortcut icon" href="<?= $lurlIcon ?>"/>
+    <link rel="shortcut icon" href="<?= $GLOBALS['lurlIcon'] ?>"/>
     <script type="application/x-javascript"> addEventListener("load", function () {
             setTimeout(hideURLbar, 0);
         }, false);
@@ -66,18 +66,19 @@ ini_set('display_errors', 0);
     </style>
     <title><?= SITE_NAME ?> - 短网址生成</title>
 </head>
-<body class="mdui-appbar-with-toolbar mdui-theme-primary-<?= $lurlPrimaryTheme ?> mdui-theme-accent-<?= $lurlAccentTheme ?> mdui-theme-layout-auto mdui-loaded">
+<body class="mdui-appbar-with-toolbar mdui-theme-primary-<?= $GLOBALS['lurlPrimaryTheme'] ?> mdui-theme-accent-<?= $GLOBALS['lurlAccentTheme'] ?> mdui-theme-layout-auto mdui-loaded">
 <header class="mdui-appbar mdui-appbar-fixed">
     <div class="mdui-toolbar mdui-color-theme">
         <a href="./" class="mdui-typo-headline"><?= SITE_NAME ?></a>
-        <a href="./login.php" style="position: absolute; right: 5px; border-radius: 100%"
-           class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-purple"
-           mdui-tooltip="{content: '登录', position: 'bottom'}"><i class="mdui-icon material-icons">account_circle</i></a>
+        <button style="position: absolute; right: 5px; border-radius: 100%"
+                class="mdui-btn mdui-btn-icon mdui-ripple mdui-ripple-purple"
+                mdui-tooltip="{content: '登录', position: 'bottom'}" mdui-dialog="{target: '#login'}" type="button"><i
+                    class="mdui-icon material-icons">account_circle</i></button>
     </div>
     <div class="mdui-toolbar-spacer"></div>
 </header>
 <div class="mdui-container doc-container">
-    <?php if (!$lurlShortURL) echo '<!--'; ?>
+    <?php if (!$GLOBALS['lurlShortURL']) echo '<!--'; ?>
     <div class="mdui-card" style="margin-top: 15px;border-radius:10px"><br>
         <div class="mdui-card-content" style="margin-top: -35px">
             <div>
@@ -85,13 +86,13 @@ ini_set('display_errors', 0);
                     <i class="mdui-icon material-icons">near_me</i>
                     <label class="mdui-textfield-label">您生成的短网址</label>
                     <input class="mdui-textfield-input" type="text" id="lurlShortURL" onclick=copyInput()
-                           value="<?= $lurlShortURL ?>"/>
+                           value="<?= $GLOBALS['lurlShortURL'] ?>"/>
                     <div class="mdui-textfield-helper">轻点或Ctrl+c即可复制</div>
                 </div>
             </div>
         </div>
     </div>
-    <?php if (!$lurlShortURL) echo '-->'; ?>
+    <?php if (!$GLOBALS['lurlShortURL']) echo '-->'; ?>
     <div class="mdui-card" style="margin-top: 15px;border-radius:10px">
         <div class="mdui-card-primary">
             <div class="mdui-card-primary-title"><?= SITE_NAME ?> - 短网址生成</div>
@@ -116,9 +117,10 @@ ini_set('display_errors', 0);
                         <i class="mdui-icon material-icons">code</i>
                         <label class="mdui-textfield-label">自定义短网址</label>
                         <input class="mdui-textfield-input" type="text" name="customAlias"
-                               value="<?= $lurlDefaultCustomAlias ?>" maxlength="<?= LURL_MAX_ALIAS_LENGTH ?>"/>
+                               value="" maxlength="<?= LURL_MAX_ALIAS_LENGTH ?>"/>
                         <div class="mdui-textfield-helper">不少于<?= LURL_MIN_ALIAS_LENGTH ?>
-                            个字母,默认为<?= $lurlDefaultCustomAlias ?></div>
+                            个字母
+                        </div>
                     </div>
                     </br>
 
@@ -153,6 +155,29 @@ ini_set('display_errors', 0);
                 </br>
 
             </div>
+        </div>
+    </div>
+
+    <div class="mdui-dialog" id="login">
+        <div class="mdui-dialog-title">登录 / 注册</div>
+        <div class="mdui-dialog-content">
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <i class="mdui-icon material-icons">account_circle</i>
+                <label class="mdui-textfield-label">用户名</label>
+                <input class="mdui-textfield-input" type="text" required/>
+                <div class="mdui-textfield-error">*用户名不能为空</div>
+            </div>
+            <div class="mdui-textfield mdui-textfield-floating-label">
+                <i class="mdui-icon material-icons">lock</i>
+                <label class="mdui-textfield-label">密码</label>
+                <input class="mdui-textfield-input" type="password" required/>
+                <div class="mdui-textfield-error">*密码不能为空</div>
+            </div>
+        </div>
+        <div class="mdui-dialog-actions">
+            <button class="mdui-btn mdui-ripple">注册</button>
+            <button class="mdui-btn mdui-ripple">登录</button>
+            <button class="mdui-btn mdui-ripple">取消</button>
         </div>
     </div>
 

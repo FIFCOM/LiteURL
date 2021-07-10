@@ -2,9 +2,9 @@
 require_once("config/config.php");
 require_once("pages/functions.php");
 $SvrName = $_SERVER['HTTP_HOST'] . str_replace('/index.php', '', $_SERVER['PHP_SELF']);
-$lurlDefaultCustomAlias = lurlRandomToken(LURL_MIN_ALIAS_LENGTH);
+// $lurlDefaultCustomAlias = lurlRandomToken(LURL_MIN_ALIAS_LENGTH);  -- Deprecated
 $lurlCustomUri = $_REQUEST['customUri'] ?? 0;
-$lurlCustomAlias = $_REQUEST['customAlias'] ?? 0;
+$lurlCustomAlias = isset($_REQUEST['customAlias']) && strlen($_REQUEST['customAlias']) > 0 ? $_REQUEST['customAlias'] : lurlRandomToken(LURL_MIN_ALIAS_LENGTH);
 $lurlCustomKey = isset($_REQUEST['customKey']) && strlen($_REQUEST['customKey']) > 0 ? $_REQUEST['customKey'] : "1";
 $lurlCustomExpire = $_REQUEST['customExpire'] ?? 0;
 if (!lurlUserPermissionGroup("test")) $lurlNeverExpireStatus = "disabled"; else $lurlNeverExpireStatus = "";
