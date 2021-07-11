@@ -4,6 +4,11 @@ if (!defined('LITEURL_VERSION')) {
     exit();
 }
 
+/**
+ * 生成指定长度的字符串
+ * @param $strLength
+ * @return string
+ */
 function lurlRandomToken($strLength): string
 {
     $str = 'qwertyuiopasdfghjklzxcvbnm';
@@ -18,6 +23,7 @@ function lurlRandomToken($strLength): string
 }
 
 /**
+ * LiteURL Execute SQL Statement <br>
  * 执行SQL语句, 返回数组
  * @param $statement string
  * @return array
@@ -26,20 +32,25 @@ function lurlExecSqlStmt(string $statement): array
 {
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, $statement);
-    $res['length'] = mysqli_num_rows($result);
-    if ($res['length'] === 0) {
+    $result = $conn->query($statement);
+    if ($result === TRUE) echo 1; else echo 2;
+    $res['length'] = mysqli_num_rows($result) + 0;
+    if ($res['length'] == 0) {
         $res['result'] = null;
     } else {
-        for ($l = 0; $row = mysqli_fetch_array($result); $l++) {
-            foreach ($row as $key => $value) {
-                $res['result'][$l]['$key'] = $value;
-            }
-        }
+        for ($l = 0; $row = mysqli_fetch_array($result); $l++)
+            foreach ($row as $key => $value)
+                $res['result'][$l][$key] = $value;
     }
+    mysqli_close($conn);
     return $res;
 }
 
+/**
+ * 返回string的二维码链接
+ * @param $string
+ * @return string
+ */
 function lurlQRUri($string): string
 {
     return 'https://www.zhihu.com/qrcode?url=' . urlencode($string);
@@ -70,16 +81,12 @@ function lurlGet($alias, $key)
     $key = hash("ripemd128", $key);
     $rawAlias = $alias;
     $alias = hash("ripemd128", $alias);
-    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
-    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT * FROM lurl WHERE alias='$alias'");
-    $row = mysqli_fetch_array($result);
-    if (!$row) return 0;
-    $encryptedUri = base64_decode($row['uri']);
-    $expire = $row['expire'] - date("y") * 366 + date("m") * 31 + date("d");
+    $res = lurlExecSqlStmt("SELECT * FROM lurl WHERE alias='$alias'");
+    if (!$res['length']) return 0;
+    $encryptedUri = base64_decode($res['result'][0]['uri']);
+    $expire = $res['result'][0]['expire'] - date("y") * 366 + date("m") * 31 + date("d");
     if (!$encryptedUri) return 0;
-    mysqli_close($conn);
-    $uri = openssl_decrypt(base64_decode($row['uri']), 'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_CRYPT_IV);
+    $uri = openssl_decrypt(base64_decode($res['result'][0]['uri']), 'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_CRYPT_IV);
     if ($expire <= 0) {
         lurlDelete($rawAlias);
         return 0;
@@ -91,75 +98,53 @@ function lurlGet($alias, $key)
 
 function lurlIsAliasExist($alias): int
 {
-    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
-    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
     $alias = hash("ripemd128", $alias);
-    $result = mysqli_query($conn, "SELECT * FROM lurl WHERE alias='$alias'");
-    $row = mysqli_fetch_array($result);
-    if ($row) return 1; else return 0;
+    $result = lurlExecSqlStmt("SELECT * FROM lurl WHERE alias='$alias'");
+    if ($result['length']) return 1; else return 0;
 }
 
 function lurlDelete($alias): int
 {
     $alias = hash("ripemd128", $alias);
-    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
-    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    mysqli_query($conn, "DELETE FROM lurl WHERE alias='$alias'");
-    mysqli_close($conn);
+    lurlExecSqlStmt("DELETE FROM lurl WHERE alias='$alias'");
     return 1;
 }
 
 function lurlCount($alias): int
 {
     $alias = hash("ripemd128", $alias);
-    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
-    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT count FROM lurl WHERE alias='$alias'");
-    $row = mysqli_fetch_array($result);
-    $count = $row["count"] + 1;
+    $result = lurlExecSqlStmt("SELECT count FROM lurl WHERE alias='$alias'");
+    $count = $result['result'][0]["count"] + 1;
     if (!$count) return 0;
-    mysqli_query($conn, "UPDATE lurl SET count='$count' WHERE alias='$alias'");
-    mysqli_close($conn);
+    lurlExecSqlStmt("UPDATE lurl SET count='$count' WHERE alias='$alias'");
     return 1;
 }
 
 function lurlUserPermissionGroup($username): int
 {
     $username = hash("ripemd128", $username);
-    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
-    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT * FROM lurl_username WHERE username='$username'");
-    if (!$result) return 0;
-    $row = mysqli_fetch_array($result);
-    mysqli_close($conn);
-    return $row["permission_group"];
+    $result = lurlExecSqlStmt("SELECT * FROM lurl_username WHERE username='$username'");
+    if (!$result['length']) return 0;
+    return $result['result'][0]["permission_group"];
 }
 
 function lurlGetApiToken($username, $password)
 {
     $username = hash("ripemd128", $username);
     $password = hash("ripemd128", $password . $username);
-    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
-    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
-    if (!$result) return 0;
-    $row = mysqli_fetch_array($result);
-    mysqli_close($conn);
-    return $row["api_token"];
+    $result = lurlExecSqlStmt("SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
+    if (!$result['length']) return 0;
+    return $result['result'][0]["api_token"];
 }
 
 function lurlRenewApiToken($username, $password)
 {
     $username = hash("ripemd128", $username);
     $password = hash("ripemd128", $password . $username);
-    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
-    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
-    $row = mysqli_fetch_array($result);
-    if (!$row) return 0;
+    $result = lurlExecSqlStmt("SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
+    if (!$result['length']) return 0;
     $api_token = hash("ripemd128", lurlRandomToken(32));
-    mysqli_query($conn, "UPDATE lurl_userdata SET api_token='$api_token' WHERE username='$username' AND password='$password'");
-    mysqli_close($conn);
+    lurlExecSqlStmt("UPDATE lurl_userdata SET api_token='$api_token' WHERE username='$username' AND password='$password'");
     return $api_token;
 }
 
@@ -169,12 +154,9 @@ function lurlUserLogin($username, $password)
     $rawPassword = $password;
     $username = hash("ripemd128", $username);
     $password = hash("ripemd128", $password . $username);
-    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
-    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
-    $row = mysqli_fetch_array($result);
-    if (!$row) return 0;
-    else return base64_encode(openssl_encrypt("!$rawUsername" . "?" . "$rawPassword" . '$', 'aes-128-cbc', hash("ripemd128", $_SERVER['REMOTE_ADDR']), OPENSSL_RAW_DATA, LURL_CRYPT_IV));;
+    $result = lurlExecSqlStmt("SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
+    if (!$result['length']) return 0;
+    else return base64_encode(openssl_encrypt("!$rawUsername" . "?" . "$rawPassword" . '$', 'aes-128-cbc', hash("ripemd128", $_SERVER['REMOTE_ADDR']), OPENSSL_RAW_DATA, LURL_CRYPT_IV));
 }
 
 function lurlUserReg($username, $password, $permission_group): int
@@ -182,21 +164,10 @@ function lurlUserReg($username, $password, $permission_group): int
     $api_token = hash("ripemd128", lurlRandomToken(32));
     $username = hash("ripemd128", $username);
     $password = hash("ripemd128", $password . $username);
-    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
-    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT * FROM lurl_userdata WHERE username='$username'");
-    $row = mysqli_fetch_array($result);
-    if (!$row) {
-        $sql = "INSERT INTO lurl_userdata (username, password, permission_group, api_token) VALUES ('$username', '$password', '$permission_group', '$api_token')";
-        if ($conn->query($sql) === TRUE) {
-            mysqli_close($conn);
-            return 1;
-        } else {
-            mysqli_close($conn);
-            return 0;
-        }
+    $result = lurlExecSqlStmt("SELECT * FROM lurl_userdata WHERE username='$username'");
+    if (!$result['length']) {
+        lurlExecSqlStmt("INSERT INTO lurl_userdata (username, password, permission_group, api_token) VALUES ('$username', '$password', '$permission_group', '$api_token')");
     }
-    mysqli_close($conn);
     return 0;
 }
 
@@ -204,21 +175,10 @@ function lurlUserDelete($username, $password): int
 {
     $username = hash("ripemd128", $username);
     $password = hash("ripemd128", $password . $username);
-    $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
-    if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
-    $result = mysqli_query($conn, "SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
-    $row = mysqli_fetch_array($result);
-    if ($row) {
-        $sql = "DELETE FROM lurl_userdata WHERE username='$username' AND password='$password'";
-        if ($conn->query($sql) === TRUE) {
-            mysqli_close($conn);
-            return 1;
-        } else {
-            mysqli_close($conn);
-            return 0;
-        }
+    $result = lurlExecSqlStmt("SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
+    if ($result['length']) {
+        lurlExecSqlStmt("DELETE FROM lurl_userdata WHERE username='$username' AND password='$password'");
     }
-    mysqli_close($conn);
     return 0;
 }
 
