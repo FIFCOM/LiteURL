@@ -33,14 +33,21 @@ function lurlExecSqlStmt(string $statement): array
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
     $result = $conn->query($statement);
-    if ($result === TRUE) echo 1; else echo 2;
-    $res['length'] = mysqli_num_rows($result) + 0;
-    if ($res['length'] == 0) {
-        $res['result'] = null;
+    // $result 的类型 : 查询成功为 object, 否则为 boolean
+    if (gettype($result) !== "boolean") {
+        // 所以只要查询成功，length一定 >= 0 且不为null
+        $res['length'] = mysqli_num_rows($result) + 0;
+        if ($res['length'] == 0) {
+            $res['result'] = null;
+        } else {
+            for ($l = 0; $row = mysqli_fetch_array($result); $l++)
+                foreach ($row as $key => $value)
+                    $res['result'][$l][$key] = $value;
+        }
     } else {
-        for ($l = 0; $row = mysqli_fetch_array($result); $l++)
-            foreach ($row as $key => $value)
-                $res['result'][$l][$key] = $value;
+        // 查询失败则 length === null
+        $res['length'] = null;
+        $res['result'] = null;
     }
     mysqli_close($conn);
     return $res;
