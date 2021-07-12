@@ -62,7 +62,7 @@ function lurlSet($uri, $alias, $key, $expire): int
     if (substr($uri, 0, 7) != "http://" && substr($uri, 0, 8) != "https://") return 0;
     $key = hash("ripemd128", $key);
     $alias = hash("ripemd128", $alias);
-    $encryptedUri = base64_encode(openssl_encrypt($uri, 'aes-128-cbc', "$key", OPENSSL_RAW_DATA, LURL_CRYPT_IV));
+    $encryptedUri = base64_encode(openssl_encrypt($uri, 'aes-128-cbc', "$key", OPENSSL_RAW_DATA, LURL_SECRET_KEY));
     $expire = $expire ? ($expire + date("y") * 366 + date("m") * 31 + date("d")) : "999999";
     $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
     if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
@@ -86,7 +86,7 @@ function lurlGet($alias, $key)
     $encryptedUri = base64_decode($res['result'][0]['uri']);
     $expire = $res['result'][0]['expire'] - date("y") * 366 + date("m") * 31 + date("d");
     if (!$encryptedUri) return 0;
-    $uri = openssl_decrypt(base64_decode($res['result'][0]['uri']), 'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_CRYPT_IV);
+    $uri = openssl_decrypt(base64_decode($res['result'][0]['uri']), 'aes-128-cbc', $key, OPENSSL_RAW_DATA, LURL_SECRET_KEY);
     if ($expire <= 0) {
         lurlDelete($rawAlias);
         return 0;
@@ -156,7 +156,7 @@ function lurlUserLogin($username, $password)
     $password = hash("ripemd128", $password . $username);
     $result = lurlExecSqlStmt("SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
     if (!$result['length']) return 0;
-    else return base64_encode(openssl_encrypt("!$rawUsername" . "?" . "$rawPassword" . '$', 'aes-128-cbc', hash("ripemd128", $_SERVER['REMOTE_ADDR']), OPENSSL_RAW_DATA, LURL_CRYPT_IV));
+    else return base64_encode(openssl_encrypt("!$rawUsername" . "?" . "$rawPassword" . '$', 'aes-128-cbc', hash("ripemd128", $_SERVER['REMOTE_ADDR']), OPENSSL_RAW_DATA, LURL_SECRET_KEY));
 }
 
 function lurlUserReg($username, $password, $permission_group): int

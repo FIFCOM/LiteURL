@@ -7,7 +7,7 @@ const ICON_URL = 'https://fifcom.cn/avatar/?transparent=1';
 
 /* Advanced settings */
 const TLS_ENCRYPT = 'disable';
-const LURL_CRYPT_IV = '1234567890123456';
+const LURL_SECRET_KEY = '1234567890123456'; // 重要！请勿遗失
 const LITEURL_VERSION = '0.9.9b';
 
 /* DB settings */
