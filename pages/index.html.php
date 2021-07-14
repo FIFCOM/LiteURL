@@ -113,6 +113,7 @@ ini_set('display_errors', 0);
                         <input class="mdui-textfield-input" type="text" name="customKey" maxlength="16"/>
                         <div class="mdui-textfield-helper">默认无密码</div>
                     </div>
+                    <?php if (!lurlFn::loginStats()) echo '<!--'; ?>
                     <div class="mdui-textfield mdui-textfield-floating-label">
                         <i class="mdui-icon material-icons">code</i>
                         <label class="mdui-textfield-label">自定义短网址</label>
@@ -122,6 +123,7 @@ ini_set('display_errors', 0);
                             个字母
                         </div>
                     </div>
+                    <?php if (!lurlFn::loginStats()) echo '-->'; ?>
                     <br>
 
                     <label class="mdui-radio">
@@ -145,7 +147,7 @@ ini_set('display_errors', 0);
                     <label class="mdui-radio">
                         <input type="radio" name="customExpire" value="0" <?= $lurlNeverExpireStatus ?>/>
                         <i class="mdui-radio-icon"></i>
-                        永久有效
+                        长期有效
                     </label>
                     <p><input style="float: right;" class="mdui-btn mdui-color-theme-accent mdui-ripple" id="mode"
                               type="submit" value="生成短网址"></p>
@@ -161,6 +163,7 @@ ini_set('display_errors', 0);
     <div class="mdui-dialog" id="login">
         <div class="mdui-dialog-title">登录 / 注册</div>
         <div class="mdui-dialog-content">
+            未注册用户将自动创建账户
             <div class="mdui-textfield mdui-textfield-floating-label">
                 <i class="mdui-icon material-icons">account_circle</i>
                 <label class="mdui-textfield-label">用户名</label>
@@ -175,9 +178,8 @@ ini_set('display_errors', 0);
             </div>
         </div>
         <div class="mdui-dialog-actions">
-            <button class="mdui-btn mdui-ripple">注册</button>
-            <button class="mdui-btn mdui-ripple">登录</button>
-            <button class="mdui-btn mdui-ripple">取消</button>
+            <button class="mdui-btn mdui-ripple" type="submit">登录 / 注册</button>
+            <button class="mdui-btn mdui-ripple" mdui-dialog-close>取消</button>
         </div>
     </div>
 
@@ -199,7 +201,8 @@ ini_set('display_errors', 0);
         document.execCommand("Copy");
     }
 </script>
-<script><?= $lurlConsoleCopy ?></script>
+<script src="pages/bg_anime.js"></script>
+<script><?= $GLOBALS['lurlConsoleCopy'] ?></script>
 </body>
 </html>
 

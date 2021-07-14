@@ -1,6 +1,6 @@
 <?php
-require_once("config/config.php");
-require_once("pages/functions.php");
+include "config/config.php";
+include "pages/functions.php";
 
 ?>
 

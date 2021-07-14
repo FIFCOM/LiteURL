@@ -1,6 +1,7 @@
 <?php
-require_once("config/config.php");
-require_once("pages/functions.php");
+// deprecated --- fn will move to index.php
+include_once "config/config.php";
+include_once "pages/functions.php";
 $SvrName = $_SERVER['HTTP_HOST'] . str_replace('/redirect.php', '', $_SERVER['PHP_SELF']);
 
 $lurlRedirectAlias = isset($_REQUEST['alias']) ? substr($_REQUEST['alias'], 1, strlen($_REQUEST['alias'])) : 0;
@@ -8,7 +9,7 @@ $lurlRedirectKey = isset($_REQUEST['key']) && strlen($_REQUEST['key']) > 0 ? $_R
 
 if ($lurlRedirectAlias) {
     if ($lurlRedirectKey) {
-        $lurlRedirectUri = lurlGet($lurlRedirectAlias, $lurlRedirectKey);
+        $lurlRedirectUri = lurlFn::get($lurlRedirectAlias, $lurlRedirectKey);
         if ($lurlRedirectUri == -1) {
             $lurlCardMessage = "访问密码错误，请重试";
             require_once("pages/redirectKeyValidate.html.php");
@@ -20,7 +21,7 @@ if ($lurlRedirectAlias) {
             exit();
         }
     } else {
-        $lurlRedirectUri = lurlGet($lurlRedirectAlias, "1");
+        $lurlRedirectUri = lurlFn::get($lurlRedirectAlias, "1");
         if ($lurlRedirectUri == -1) {
             $lurlCardMessage = "请输入访问密码";
             require_once("pages/redirectKeyValidate.html.php");
