@@ -16,8 +16,8 @@ const LURL_DB_HOSTNAME = 'localhost';
 const LURL_DB_USERNAME = 'root';
 const LURL_DB_PASSWORD = 'localhost';
 const LURL_DB_NAME = 'LiteURL';
-const LURL_MIN_ALIAS_LENGTH = '6';
-const LURL_MAX_ALIAS_LENGTH = '16';
+const LURL_MIN_ALIAS_LENGTH = 6;
+const LURL_MAX_ALIAS_LENGTH = 16;
 
 error_reporting(E_ALL);
 $_ERROR = array();

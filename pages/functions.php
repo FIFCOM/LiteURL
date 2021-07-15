@@ -10,7 +10,7 @@ class  lurlFn
      * @param $strLength
      * @return string
      */
-    static function randStr($strLength): string
+    public static function randStr($strLength): string
     {
         $str = 'qwertyuiopasdfghjklzxcvbnm';
         $str .= 'QWERTYUIOPASDFGHJKLZXCVBNM';
@@ -29,8 +29,14 @@ class  lurlFn
      * @param $statement string
      * @return array
      */
-    static function execSql(string $statement): array
+    public static function execSql(string $statement): array
     {
+        // $statement 不能为空，否则在查询的时候会 Notice
+        if (!$statement) {
+            $res['length'] = null;
+            $res['result'] = null;
+            return $res;
+        }
         $conn = mysqli_connect(LURL_DB_HOSTNAME, LURL_DB_USERNAME, LURL_DB_PASSWORD, LURL_DB_NAME);
         if (mysqli_connect_errno()) echo "Lite URL MySQL Connect Error : " . mysqli_connect_error();
         $result = $conn->query($statement);
@@ -59,12 +65,12 @@ class  lurlFn
      * @param $string
      * @return string
      */
-    static function QR($string): string
+    public static function QR($string): string
     {
         return 'https://www.zhihu.com/qrcode?url=' . urlencode($string);
     }
 
-    static function set($uri, $alias, $key, $expire): int
+    public static function set($uri, $alias, $key, $expire): int
     {
         if (lurlFn::aliasExist($alias)) return 0;
         if (substr($uri, 0, 7) != "http://" && substr($uri, 0, 8) != "https://") return 0;
@@ -82,7 +88,7 @@ class  lurlFn
      * @param string $password
      * @return string
      */
-    static function encrypt($data, string $password): string
+    public static function encrypt($data, string $password): string
     {
         return base64_encode(openssl_encrypt($data, 'aes-128-cbc', $password, OPENSSL_RAW_DATA, LURL_SECRET_KEY));
     }
@@ -93,12 +99,12 @@ class  lurlFn
      * @param string $password
      * @return string
      */
-    static function decrypt($data, string $password): string
+    public static function decrypt($data, string $password): string
     {
         return base64_encode(openssl_decrypt($data, 'aes-128-cbc', $password, OPENSSL_RAW_DATA, LURL_SECRET_KEY));
     }
 
-    static function get($alias, $key)
+    public static function get($alias, $key)
     {
         $key = hash("md5", $key);
         $rawAlias = $alias;
@@ -118,21 +124,21 @@ class  lurlFn
         else return base64_decode($uri);
     }
 
-    static function aliasExist($alias): int
+    public static function aliasExist($alias): int
     {
         $alias = hash("md5", $alias);
         $result = lurlFn::execSql("SELECT * FROM lurl WHERE alias='$alias'");
         if ($result['length']) return 1; else return 0;
     }
 
-    static function delete($alias): int
+    public static function delete($alias): int
     {
         $alias = hash("md5", $alias);
         lurlFn::execSql("DELETE FROM lurl WHERE alias='$alias'");
         return 1;
     }
 
-    static function count($alias): int
+    public static function count($alias): int
     {
         $alias = hash("md5", $alias);
         $result = lurlFn::execSql("SELECT count FROM lurl WHERE alias='$alias'");
@@ -142,7 +148,7 @@ class  lurlFn
         return 1;
     }
 
-    static function userPermission($username): int
+    public static function userPermission($username): int
     {
         $username = hash("md5", $username);
         $result = lurlFn::execSql("SELECT * FROM lurl_username WHERE username='$username'");
@@ -150,7 +156,7 @@ class  lurlFn
         return $result['result'][0]["permission_group"];
     }
 
-    static function getApiToken($username, $password)
+    public static function getApiToken($username, $password)
     {
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
@@ -159,7 +165,7 @@ class  lurlFn
         return $result['result'][0]["api_token"];
     }
 
-    static function renewApiToken($username, $password)
+    public static function renewApiToken($username, $password)
     {
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
@@ -170,7 +176,7 @@ class  lurlFn
         return $api_token;
     }
 
-    static function userLogin($username, $password)
+    public static function userLogin($username, $password)
     {
         $rawUsername = $username;
         $rawPassword = $password;
@@ -181,7 +187,7 @@ class  lurlFn
         else return base64_encode(openssl_encrypt("!$rawUsername" . "?" . "$rawPassword" . '$', 'aes-128-cbc', hash("md5", $_SERVER['REMOTE_ADDR']), OPENSSL_RAW_DATA, LURL_SECRET_KEY));
     }
 
-    static function userReg($username, $password, $permission_group): int
+    public static function userReg($username, $password, $permission_group): int
     {
         $api_token = hash("md5", lurlFn::randStr(32));
         $username = hash("md5", $username);
@@ -193,7 +199,7 @@ class  lurlFn
         return 0;
     }
 
-    static function userDelete($username, $password): int
+    public static function userDelete($username, $password): int
     {
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
@@ -204,9 +210,14 @@ class  lurlFn
         return 0;
     }
 
-    static function loginStats(): bool
+    public static function loginStats(): bool
     {
         return false;
+    }
+
+    public static function apiQueryUser(): string
+    {
+        return "";
     }
 }
 
