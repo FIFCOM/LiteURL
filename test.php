@@ -1,6 +1,6 @@
 <?php
 require_once("config/config.php");
-require_once("pages/functions.php");
+require_once("pages/lurl.php");
 // echo json_encode(lurlExecSqlStmt("SELECT table_name FROM information_schema.TABLES WHERE table_name ='lurl_userdata'")); 判断表是否存在
 ?>
 

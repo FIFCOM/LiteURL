@@ -1,6 +1,6 @@
 <?php
 include "config/config.php";
-include "pages/functions.php";
+include "pages/lurl.php";
 
 ?>
 

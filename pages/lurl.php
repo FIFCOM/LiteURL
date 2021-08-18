@@ -3,14 +3,19 @@ if (!defined('LITEURL_VERSION')) {
     header('HTTP/1.0 403 Forbidden');
     exit();
 }
-class  lurlFn
+$lurlIcon = ICON_URL ?: "https://secure.gravatar.com/avatar/";
+$lurlScheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
+$lurlPrimaryTheme = PRIMARY_THEME;
+$lurlAccentTheme = ACCENT_THEME;
+$lurlConsoleCopy = 'console.log(\'%cLiteURL  %c  ' . LITEURL_VERSION . '%cGNU GPL v3\', \'color: #fff; background: #0D47A1; font-size: 15px;border-radius:5px 0 0 5px;padding:10px 0 10px 20px;\',\'color: #fff; background: #42A5F5; font-size: 15px;border-radius:0;padding:10px 15px 10px 0px;\',\'color: #fff; background: #00695C; font-size: 15px;border-radius:0 5px 5px 0;padding:10px 20px 10px 15px;\');console.log(\'%c https://github.com/FIFCOM/LiteURL\', \'font-size: 12px;border-radius:5px;padding:3px 10px 3px 10px;border:1px solid #00695C;\');';
+class lurl
 {
     /**
      * 生成指定长度的字符串
      * @param $strLength
      * @return string
      */
-    public static function randStr($strLength): string
+    public static function rand_str($strLength): string
     {
         $str = 'qwertyuiopasdfghjklzxcvbnm';
         $str .= 'QWERTYUIOPASDFGHJKLZXCVBNM';
@@ -72,13 +77,13 @@ class  lurlFn
 
     public static function set($uri, $alias, $key, $expire): int
     {
-        if (lurlFn::aliasExist($alias)) return 0;
+        if (lurl::aliasExist($alias)) return 0;
         if (substr($uri, 0, 7) != "http://" && substr($uri, 0, 8) != "https://") return 0;
         $key = hash("md5", $key);
         $alias = hash("md5", $alias);
-        $encryptedUri = lurlFn::encrypt($uri, $key);
+        $encryptedUri = lurl::encrypt($uri, $key);
         $expire = $expire ? ($expire + date("y") * 366 + date("m") * 31 + date("d")) : "999999";
-        $res = lurlFn::execSql("INSERT INTO lurl (uri, alias, expire, count) VALUES ('$encryptedUri', '$alias', '$expire', 0)");
+        $res = lurl::execSql("INSERT INTO lurl (uri, alias, expire, count) VALUES ('$encryptedUri', '$alias', '$expire', 0)");
         if ($res['length'] !== null) return 1; else return 0;
     }
 
@@ -109,17 +114,17 @@ class  lurlFn
         $key = hash("md5", $key);
         $rawAlias = $alias;
         $alias = hash("md5", $alias);
-        $res = lurlFn::execSql("SELECT * FROM lurl WHERE alias='$alias'");
+        $res = lurl::execSql("SELECT * FROM lurl WHERE alias='$alias'");
         if (!$res['length']) return 0;
         $encryptedUri = base64_decode($res['result'][0]['uri']);
         $expire = $res['result'][0]['expire'] - date("y") * 366 + date("m") * 31 + date("d");
         if (!$encryptedUri) return 0;
-        $uri = lurlFn::decrypt(base64_decode($res['result'][0]['uri']), $key);
+        $uri = lurl::decrypt(base64_decode($res['result'][0]['uri']), $key);
         if ($expire <= 0) {
-            lurlFn::delete($rawAlias);
+            lurl::delete($rawAlias);
             return 0;
         }
-        lurlFn::count($rawAlias);
+        lurl::count($rawAlias);
         if (!$uri) return -1;
         else return base64_decode($uri);
     }
@@ -127,31 +132,31 @@ class  lurlFn
     public static function aliasExist($alias): int
     {
         $alias = hash("md5", $alias);
-        $result = lurlFn::execSql("SELECT * FROM lurl WHERE alias='$alias'");
+        $result = lurl::execSql("SELECT * FROM lurl WHERE alias='$alias'");
         if ($result['length']) return 1; else return 0;
     }
 
     public static function delete($alias): int
     {
         $alias = hash("md5", $alias);
-        lurlFn::execSql("DELETE FROM lurl WHERE alias='$alias'");
+        lurl::execSql("DELETE FROM lurl WHERE alias='$alias'");
         return 1;
     }
 
     public static function count($alias): int
     {
         $alias = hash("md5", $alias);
-        $result = lurlFn::execSql("SELECT count FROM lurl WHERE alias='$alias'");
+        $result = lurl::execSql("SELECT count FROM lurl WHERE alias='$alias'");
         $count = $result['result'][0]["count"] + 1;
         if (!$count) return 0;
-        lurlFn::execSql("UPDATE lurl SET count='$count' WHERE alias='$alias'");
+        lurl::execSql("UPDATE lurl SET count='$count' WHERE alias='$alias'");
         return 1;
     }
 
     public static function userPermission($username): int
     {
         $username = hash("md5", $username);
-        $result = lurlFn::execSql("SELECT * FROM lurl_username WHERE username='$username'");
+        $result = lurl::execSql("SELECT * FROM lurl_username WHERE username='$username'");
         if (!$result['length']) return 0;
         return $result['result'][0]["permission_group"];
     }
@@ -160,7 +165,7 @@ class  lurlFn
     {
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
-        $result = lurlFn::execSql("SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
+        $result = lurl::execSql("SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
         if (!$result['length']) return 0;
         return $result['result'][0]["api_token"];
     }
@@ -169,10 +174,10 @@ class  lurlFn
     {
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
-        $result = lurlFn::execSql("SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
+        $result = lurl::execSql("SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
         if (!$result['length']) return 0;
-        $api_token = hash("md5", lurlFn::randStr(32));
-        lurlFn::execSql("UPDATE lurl_userdata SET api_token='$api_token' WHERE username='$username' AND password='$password'");
+        $api_token = hash("md5", lurl::rand_str(32));
+        lurl::execSql("UPDATE lurl_userdata SET api_token='$api_token' WHERE username='$username' AND password='$password'");
         return $api_token;
     }
 
@@ -182,19 +187,19 @@ class  lurlFn
         $rawPassword = $password;
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
-        $result = lurlFn::execSql("SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
+        $result = lurl::execSql("SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
         if (!$result['length']) return 0;
         else return base64_encode(openssl_encrypt("!$rawUsername" . "?" . "$rawPassword" . '$', 'aes-128-cbc', hash("md5", $_SERVER['REMOTE_ADDR']), OPENSSL_RAW_DATA, LURL_SECRET_KEY));
     }
 
     public static function userReg($username, $password, $permission_group): int
     {
-        $api_token = hash("md5", lurlFn::randStr(32));
+        $api_token = hash("md5", lurl::rand_str(32));
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
-        $result = lurlFn::execSql("SELECT * FROM lurl_userdata WHERE username='$username'");
+        $result = lurl::execSql("SELECT * FROM lurl_userdata WHERE username='$username'");
         if (!$result['length']) {
-            lurlFn::execSql("INSERT INTO lurl_userdata (username, password, permission_group, api_token) VALUES ('$username', '$password', '$permission_group', '$api_token')");
+            lurl::execSql("INSERT INTO lurl_userdata (username, password, permission_group, api_token) VALUES ('$username', '$password', '$permission_group', '$api_token')");
         }
         return 0;
     }
@@ -203,9 +208,9 @@ class  lurlFn
     {
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
-        $result = lurlFn::execSql("SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
+        $result = lurl::execSql("SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
         if ($result['length']) {
-            lurlFn::execSql("DELETE FROM lurl_userdata WHERE username='$username' AND password='$password'");
+            lurl::execSql("DELETE FROM lurl_userdata WHERE username='$username' AND password='$password'");
         }
         return 0;
     }
@@ -221,11 +226,8 @@ class  lurlFn
     }
 }
 
+class api {
+    public static function create($uri, $alias, $key, $expire) {
 
-$lurlIcon = ICON_URL ?: "https://secure.gravatar.com/avatar/";
-if (TLS_ENCRYPT == 'auto' || TLS_ENCRYPT == '') {
-    $lurlScheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
-} else if (TLS_ENCRYPT == 'disable') $lurlScheme = 'http://'; else if (TLS_ENCRYPT == 'enable') $lurlScheme = 'https://';
-$lurlPrimaryTheme = $_COOKIE['lurlPrimaryTheme'] ?? PRIMARY_THEME;
-$lurlAccentTheme = $_COOKIE['lurlAccentTheme'] ?? ACCENT_THEME;
-$lurlConsoleCopy = 'console.log(\'%cLiteURL  %c  ' . LITEURL_VERSION . '%cGNU GPL v3\', \'color: #fff; background: #0D47A1; font-size: 15px;border-radius:5px 0 0 5px;padding:10px 0 10px 20px;\',\'color: #fff; background: #42A5F5; font-size: 15px;border-radius:0;padding:10px 15px 10px 0px;\',\'color: #fff; background: #00695C; font-size: 15px;border-radius:0 5px 5px 0;padding:10px 20px 10px 15px;\');console.log(\'%c https://github.com/FIFCOM/LiteURL\', \'font-size: 12px;border-radius:5px;padding:3px 10px 3px 10px;border:1px solid #00695C;\');';
+    }
+}
