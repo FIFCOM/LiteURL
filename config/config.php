@@ -1,13 +1,13 @@
 <?php
 /* Basic settings */
-const PRIMARY_THEME = 'teal';
-const ACCENT_THEME = 'indigo';
 const SITE_NAME = 'LiteURL';
 const ICON_URL = 'https://fifcom.cn/avatar/?transparent=1';
-const LURL_ENTRY = '';
+const PRIMARY_THEME = 'teal';
+const ACCENT_THEME = 'indigo';
+
+const LURL_ADMIN_ENTRY = '';
 
 /* Advanced settings */
-// const TLS_ENCRYPT = 'disable'; deprecated constant
 const LURL_SECRET_KEY = '1234567890123456'; // 重要！请勿遗失
 const LITEURL_VERSION = '1.0.0r';
 

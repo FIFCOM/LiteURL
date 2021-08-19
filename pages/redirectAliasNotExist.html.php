@@ -25,45 +25,6 @@ ini_set('display_errors', 0);
             integrity="sha384-cLRrMq39HOZdvE0j6yBojO4+1PrHfB7a9l5qLcmRm/fiWXYY+CndJPmyu5FV/9Tw"
             crossorigin="anonymous"
     />
-    <style>
-        html,
-        body {
-            height: 100%;
-            background: rgba(0, 0, 0, .05);
-            margin: 0
-        }
-
-        section {
-            font-family: Roboto, Helvetica, Arial, sans-serif;
-            letter-spacing: 2px;
-            text-shadow: 1px 1px 2px #d5d5d5;
-            color: #333;
-            text-align: center;
-            -webkit-user-select: none;
-            -ms-user-select: none;
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%)
-        }
-
-        a {
-            color: #333;
-            transition: all .5s ease-in-out
-        }
-
-        a:hover {
-            color: rgba(0, 0, 0, .05)
-        }
-
-        canvas {
-            pointer-events: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            z-index: -1;
-            opacity: .5
-        }
-    </style>
     <title><?= SITE_NAME ?> - 短网址生成</title>
 </head>
 <body class="mdui-appbar-with-toolbar mdui-theme-primary-<?= $lurlPrimaryTheme ?> mdui-theme-accent-<?= $lurlAccentTheme ?> mdui-theme-layout-auto mdui-loaded">
@@ -96,7 +57,6 @@ ini_set('display_errors', 0);
         integrity="sha384-gCMZcshYKOGRX9r6wbDrvF+TcCCswSHFucUzUPwka+Gr+uHgjlYvkABr95TCOz3A"
         crossorigin="anonymous"
 ></script>
-<script src="pages/bg_anime.js"></script>
 <script>
     function copyInput() {
         var input = document.getElementById("lurlShortURL");
