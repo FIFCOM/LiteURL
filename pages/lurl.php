@@ -34,7 +34,7 @@ class lurl
      * @param $statement string
      * @return array
      */
-    public static function execSql(string $statement): array
+    public static function exec_sql(string $statement): array
     {
         // $statement 不能为空，否则在查询的时候会 Notice
         if (!$statement) {
@@ -70,7 +70,7 @@ class lurl
      * @param $string
      * @return string
      */
-    public static function QR($string): string
+    public static function qr($string): string
     {
         return 'https://www.zhihu.com/qrcode?url=' . urlencode($string);
     }
@@ -83,7 +83,7 @@ class lurl
         $alias = hash("md5", $alias);
         $encryptedUri = lurl::encrypt($uri, $key);
         $expire = $expire ? ($expire + date("y") * 366 + date("m") * 31 + date("d")) : "999999";
-        $res = lurl::execSql("INSERT INTO lurl (uri, alias, expire, count) VALUES ('$encryptedUri', '$alias', '$expire', 0)");
+        $res = lurl::exec_sql("INSERT INTO lurl (uri, alias, expire, count) VALUES ('$encryptedUri', '$alias', '$expire', 0)");
         if ($res['length'] !== null) return 1; else return 0;
     }
 
@@ -114,7 +114,7 @@ class lurl
         $key = hash("md5", $key);
         $rawAlias = $alias;
         $alias = hash("md5", $alias);
-        $res = lurl::execSql("SELECT * FROM lurl WHERE alias='$alias'");
+        $res = lurl::exec_sql("SELECT * FROM lurl WHERE alias='$alias'");
         if (!$res['length']) return 0;
         $encryptedUri = base64_decode($res['result'][0]['uri']);
         $expire = $res['result'][0]['expire'] - date("y") * 366 + date("m") * 31 + date("d");
@@ -132,31 +132,31 @@ class lurl
     public static function aliasExist($alias): int
     {
         $alias = hash("md5", $alias);
-        $result = lurl::execSql("SELECT * FROM lurl WHERE alias='$alias'");
+        $result = lurl::exec_sql("SELECT * FROM lurl WHERE alias='$alias'");
         if ($result['length']) return 1; else return 0;
     }
 
     public static function delete($alias): int
     {
         $alias = hash("md5", $alias);
-        lurl::execSql("DELETE FROM lurl WHERE alias='$alias'");
+        lurl::exec_sql("DELETE FROM lurl WHERE alias='$alias'");
         return 1;
     }
 
     public static function count($alias): int
     {
         $alias = hash("md5", $alias);
-        $result = lurl::execSql("SELECT count FROM lurl WHERE alias='$alias'");
+        $result = lurl::exec_sql("SELECT count FROM lurl WHERE alias='$alias'");
         $count = $result['result'][0]["count"] + 1;
         if (!$count) return 0;
-        lurl::execSql("UPDATE lurl SET count='$count' WHERE alias='$alias'");
+        lurl::exec_sql("UPDATE lurl SET count='$count' WHERE alias='$alias'");
         return 1;
     }
 
     public static function userPermission($username): int
     {
         $username = hash("md5", $username);
-        $result = lurl::execSql("SELECT * FROM lurl_username WHERE username='$username'");
+        $result = lurl::exec_sql("SELECT * FROM lurl_username WHERE username='$username'");
         if (!$result['length']) return 0;
         return $result['result'][0]["permission_group"];
     }
@@ -165,7 +165,7 @@ class lurl
     {
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
-        $result = lurl::execSql("SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
+        $result = lurl::exec_sql("SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
         if (!$result['length']) return 0;
         return $result['result'][0]["api_token"];
     }
@@ -174,10 +174,10 @@ class lurl
     {
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
-        $result = lurl::execSql("SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
+        $result = lurl::exec_sql("SELECT api_token FROM lurl_userdata WHERE username='$username' AND password='$password'");
         if (!$result['length']) return 0;
         $api_token = hash("md5", lurl::rand_str(32));
-        lurl::execSql("UPDATE lurl_userdata SET api_token='$api_token' WHERE username='$username' AND password='$password'");
+        lurl::exec_sql("UPDATE lurl_userdata SET api_token='$api_token' WHERE username='$username' AND password='$password'");
         return $api_token;
     }
 
@@ -187,7 +187,7 @@ class lurl
         $rawPassword = $password;
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
-        $result = lurl::execSql("SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
+        $result = lurl::exec_sql("SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
         if (!$result['length']) return 0;
         else return base64_encode(openssl_encrypt("!$rawUsername" . "?" . "$rawPassword" . '$', 'aes-128-cbc', hash("md5", $_SERVER['REMOTE_ADDR']), OPENSSL_RAW_DATA, LURL_SECRET_KEY));
     }
@@ -197,9 +197,9 @@ class lurl
         $api_token = hash("md5", lurl::rand_str(32));
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
-        $result = lurl::execSql("SELECT * FROM lurl_userdata WHERE username='$username'");
+        $result = lurl::exec_sql("SELECT * FROM lurl_userdata WHERE username='$username'");
         if (!$result['length']) {
-            lurl::execSql("INSERT INTO lurl_userdata (username, password, permission_group, api_token) VALUES ('$username', '$password', '$permission_group', '$api_token')");
+            lurl::exec_sql("INSERT INTO lurl_userdata (username, password, permission_group, api_token) VALUES ('$username', '$password', '$permission_group', '$api_token')");
         }
         return 0;
     }
@@ -208,9 +208,9 @@ class lurl
     {
         $username = hash("md5", $username);
         $password = hash("md5", $password . $username);
-        $result = lurl::execSql("SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
+        $result = lurl::exec_sql("SELECT * FROM lurl_userdata WHERE username='$username' AND password='$password'");
         if ($result['length']) {
-            lurl::execSql("DELETE FROM lurl_userdata WHERE username='$username' AND password='$password'");
+            lurl::exec_sql("DELETE FROM lurl_userdata WHERE username='$username' AND password='$password'");
         }
         return 0;
     }
